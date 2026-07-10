@@ -52,7 +52,7 @@ html,body{width:100%;height:100%;height:100dvh;overflow:hidden;font-family:var(-
 .hdr::before{content:'';position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse 200px 170px at 104% -12%,rgba(0,159,219,.3),transparent 58%),radial-gradient(ellipse 150px 110px at -8% 108%,rgba(245,158,11,.13),transparent 52%)}
 .hdr-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;position:relative;z-index:1}
 .brand{display:flex;align-items:center;gap:7px;background:rgba(255,255,255,.93);padding:5px 10px;border-radius:10px}
-.brand img{height:21px;object-fit:contain}
+.brand img{height:21px;object-fit:contain;display:block}
 .b-sep{width:1px;height:14px;background:rgba(0,0,0,.1)}
 .live{display:flex;align-items:center;gap:5px;background:rgba(245,158,11,.2);border:1px solid rgba(245,158,11,.35);padding:4px 12px;border-radius:999px}
 .live-dot{width:7px;height:7px;border-radius:50%;background:var(--gold);animation:lp 1.5s ease-in-out infinite}
@@ -87,6 +87,17 @@ html,body{width:100%;height:100%;height:100dvh;overflow:hidden;font-family:var(-
 .ug-num{font-family:var(--mono);font-size:22px;font-weight:900;color:#fff;line-height:1;font-feature-settings:"tnum";transition:transform .2s cubic-bezier(.34,1.56,.64,1),color .2s}
 .ug-lbl{font-size:8px;font-weight:700;color:rgba(255,255,255,.7);text-transform:uppercase;letter-spacing:.4px}
 
+/* ALREADY DRAWN BANNER */
+.drawn-banner{background:linear-gradient(135deg,#0F1D47,#00355F);border:1.5px solid rgba(0,159,219,.3);border-radius:var(--rl);padding:16px;margin-bottom:12px;display:none;text-align:center}
+.drawn-banner.show{display:block;animation:pg-in .3s cubic-bezier(.34,1.56,.64,1)}
+.db-icon{font-size:32px;margin-bottom:8px}
+.db-title{font-size:16px;font-weight:900;color:#fff;margin-bottom:4px}
+.db-sub{font-size:12px;color:rgba(255,255,255,.55);line-height:1.5;margin-bottom:14px}
+.db-pts{font-family:var(--mono);font-size:28px;font-weight:900;color:var(--gl);margin-bottom:4px;font-feature-settings:"tnum"}
+.db-usd{font-family:var(--mono);font-size:16px;font-weight:700;color:rgba(255,255,255,.6);margin-bottom:16px;font-feature-settings:"tnum"}
+.db-btn{width:100%;padding:15px;border-radius:var(--rl);border:none;cursor:pointer;background:linear-gradient(135deg,#16a34a,#059669);font-family:var(--font);font-size:14px;font-weight:900;color:#fff;box-shadow:0 4px 16px rgba(5,150,105,.4);transition:transform .18s cubic-bezier(.34,1.56,.64,1)}
+.db-btn:active{transform:scale(.96)}
+
 /* WHEEL CARD */
 .wcard{background:#fff;border:1.5px solid rgba(0,53,95,.08);border-radius:22px;overflow:hidden;box-shadow:var(--sh-lg);margin-bottom:12px}
 .wcard-hd{background:linear-gradient(135deg,#d97706,#f59e0b);padding:14px 18px;display:flex;align-items:center;justify-content:space-between;position:relative;overflow:hidden}
@@ -97,7 +108,11 @@ html,body{width:100%;height:100%;height:100dvh;overflow:hidden;font-family:var(-
 .wcard-body{padding:18px}
 .wheel-wrap{display:flex;flex-direction:column;align-items:center;gap:16px}
 
-/* THE WHEEL */
+/* ── WHEEL ──
+   KEY FIX: hub is a SIBLING of wheel-ring, not a child.
+   It sits at the same absolute position but does NOT rotate.
+   A counter-rotation is applied in JS to keep it upright.
+*/
 .wheel-outer{width:220px;height:220px;position:relative;flex-shrink:0}
 .wheel-ptr{
   position:absolute;top:-2px;left:50%;transform:translateX(-50%);
@@ -105,26 +120,41 @@ html,body{width:100%;height:100%;height:100dvh;overflow:hidden;font-family:var(-
   border-left:14px solid transparent;
   border-right:14px solid transparent;
   border-top:26px solid #00355F;
-  z-index:5;
+  z-index:10;
   filter:drop-shadow(0 2px 4px rgba(0,0,0,.45));
 }
 .wheel-ring{
+  position:absolute;inset:0;
   width:220px;height:220px;border-radius:50%;
   background:conic-gradient(
-    #009FDB 0deg 60deg,
-    #00C9E0 60deg 120deg,
+    #009FDB   0deg  60deg,
+    #00C9E0  60deg 120deg,
     #00355F 120deg 180deg,
     #f59e0b 180deg 240deg,
     #d0021b 240deg 300deg,
     #059669 300deg 360deg
   );
   box-shadow:0 0 0 7px #fff,0 0 0 9px rgba(0,53,95,.1),var(--sh-lg);
-  position:relative;
 }
-.wheel-ring::before{content:'';position:absolute;inset:24px;border-radius:50%;background:rgba(255,255,255,.1);z-index:1}
-.wheel-hub{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;z-index:2}
-.wheel-hub-inner{width:78px;height:78px;border-radius:50%;background:linear-gradient(135deg,#001F3A,#00355F);display:flex;flex-direction:column;align-items:center;justify-content:center;border:4px solid #fff;box-shadow:0 4px 16px rgba(0,0,0,.3)}
-.hub-txt{font-family:var(--mono);font-size:11px;font-weight:900;color:#fff;line-height:1.2;text-align:center;padding:0 5px;word-break:break-all;font-feature-settings:"tnum";letter-spacing:-.01em}
+/* hub is OUTSIDE .wheel-ring — not a child, so it never rotates */
+.wheel-hub{
+  position:absolute;inset:0;
+  display:flex;align-items:center;justify-content:center;
+  z-index:5;pointer-events:none;
+}
+.wheel-hub-inner{
+  width:82px;height:82px;border-radius:50%;
+  background:linear-gradient(135deg,#001F3A,#00355F);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  border:4px solid #fff;
+  box-shadow:0 4px 16px rgba(0,0,0,.35);
+}
+.hub-txt{
+  font-family:var(--mono);font-size:10px;font-weight:900;color:#fff;
+  line-height:1.3;text-align:center;padding:0 6px;
+  font-feature-settings:"tnum";letter-spacing:-.01em;
+  word-break:break-all;max-width:70px;
+}
 .hub-lbl{font-size:7px;color:rgba(255,255,255,.45);font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-top:2px}
 
 /* SPIN BTN */
@@ -158,7 +188,7 @@ html,body{width:100%;height:100%;height:100dvh;overflow:hidden;font-family:var(-
 /* INFO CARDS */
 .ic{background:#fff;border:1.5px solid rgba(0,53,95,.08);border-radius:var(--rl);overflow:hidden;box-shadow:var(--sh);margin-bottom:12px}
 .ic-hd{background:linear-gradient(135deg,#001F3A,#00355F);padding:11px 14px;display:flex;align-items:center;gap:8px}
-.ic-hd svg{stroke:#fff;flex-shrink:0;fill:none;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round}
+.ic-hd svg{stroke:#fff;fill:none;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0;width:14px;height:14px}
 .ic-hd-t{font-size:12px;font-weight:800;color:#fff}
 .rr{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;border-bottom:1px solid rgba(0,53,95,.07)}
 .rr:last-child{border-bottom:none}
@@ -220,8 +250,9 @@ html,body{width:100%;height:100%;height:100dvh;overflow:hidden;font-family:var(-
 </style>
 </head>
 <body>
+
 <div class="curtain" id="curtain">
-  <div class="c-brand"><img src="assets/econet.png" alt=""><div class="c-sep"></div><img src="assets/ecocash.png" alt=""></div>
+  <div class="c-brand"><img src="assets/econet.png" alt="Econet"><div class="c-sep"></div><img src="assets/ecocash.png" alt="EcoCash"></div>
   <div class="c-spin"><svg width="48" height="48" viewBox="0 0 52 52" fill="none"><circle cx="26" cy="26" r="21" stroke="rgba(255,255,255,.15)" stroke-width="3"/><path d="M26 5a21 21 0 0 1 21 21" stroke="#f59e0b" stroke-width="3" stroke-linecap="round"/></svg></div>
   <div class="c-lbl" id="cLbl">Connecting</div>
   <div class="c-sub" id="cSub">Verifying your EcoCash account…</div>
@@ -231,7 +262,11 @@ html,body{width:100%;height:100%;height:100dvh;overflow:hidden;font-family:var(-
 <div class="screen" id="screen">
   <div class="hdr">
     <div class="hdr-top">
-      <div class="brand"><img src="assets/econet.png" alt="Econet"><div class="b-sep"></div><img src="assets/ecocash.png" alt="EcoCash"></div>
+      <div class="brand">
+        <img src="assets/econet.png" alt="Econet" onerror="this.style.display='none'">
+        <div class="b-sep"></div>
+        <img src="assets/ecocash.png" alt="EcoCash" onerror="this.style.display='none'">
+      </div>
       <div class="live"><div class="live-dot"></div><div class="live-txt">Live Draw</div></div>
     </div>
     <div class="hdr-body">
@@ -246,27 +281,52 @@ html,body{width:100%;height:100%;height:100dvh;overflow:hidden;font-family:var(-
   </div>
 
   <div class="body" id="bodyEl">
+
+    <!-- URGENCY BANNER -->
     <div class="urgency">
       <div class="ug-icon">⏰</div>
       <div class="ug-body"><div class="ug-title">Limited Slots Remaining Today!</div><div class="ug-sub">Draws reset at midnight · Dhirani uchiri nguva!</div></div>
       <div class="ug-box"><div class="ug-num" id="slotsNum">7</div><div class="ug-lbl">Slots Left</div></div>
     </div>
 
-    <div class="wcard">
+    <!-- ALREADY DRAWN BANNER (shown if user already spun today) -->
+    <div class="drawn-banner" id="drawnBanner">
+      <div class="db-icon">🏆</div>
+      <div class="db-title">You already drew today!</div>
+      <div class="db-sub">You won points in your last draw. Proceed to redeem your cash now · Bata mari yako!</div>
+      <div class="db-pts" id="dbPts">0 pts</div>
+      <div class="db-usd" id="dbUsd">= USD 0.00</div>
+      <button class="db-btn" onclick="proceedRedeem()">💵 Proceed to Redeem · Bata Mari</button>
+    </div>
+
+    <!-- WHEEL CARD -->
+    <div class="wcard" id="wheelCard">
       <div class="wcard-hd">
-        <div><div class="wcard-title">🎰 Lucky Draw · Dhirani</div><div class="wcard-sub">One spin per session · Bata mari yako nhasi</div></div>
+        <div><div class="wcard-title">🎰 Lucky Draw · Dhirani</div><div class="wcard-sub">One spin per day · Bata mari yako nhasi</div></div>
         <div class="wcard-range">USD 50 – 2,500</div>
       </div>
       <div class="wcard-body">
         <div class="wheel-wrap">
-          <div class="wheel-outer">
+
+          <!-- WHEEL — hub is a sibling of ring, NOT a child -->
+          <div class="wheel-outer" id="wheelOuter">
             <div class="wheel-ptr"></div>
-            <div class="wheel-ring" id="wheelRing">
-              <div class="wheel-hub"><div class="wheel-hub-inner"><div class="hub-txt" id="hubTxt">SPIN</div><div class="hub-lbl" id="hubLbl">to win</div></div></div>
+            <div class="wheel-ring" id="wheelRing"></div>
+            <!-- hub OUTSIDE ring so it never rotates -->
+            <div class="wheel-hub" id="wheelHub">
+              <div class="wheel-hub-inner">
+                <div class="hub-txt" id="hubTxt">SPIN</div>
+                <div class="hub-lbl" id="hubLbl">to win</div>
+              </div>
             </div>
           </div>
-          <button class="spin-btn" id="spinBtn" onclick="startSpin(event)">🎯 Spin the Wheel · Dhirani!</button>
+
+          <button class="spin-btn" id="spinBtn" onclick="startSpin(event)">
+            🎯 Spin the Wheel · Dhirani!
+          </button>
         </div>
+
+        <!-- RESULT CARD -->
         <div class="result-card" id="resultCard">
           <div class="result-bg">
             <div class="result-glow"></div>
@@ -280,16 +340,20 @@ html,body{width:100%;height:100%;height:100dvh;overflow:hidden;font-family:var(-
                 <div class="rc"><div class="rc-v" id="rcUsd">—</div><div class="rc-l">Cash Value</div></div>
                 <div class="rc"><div class="rc-v">100 = $5</div><div class="rc-l">Rate</div></div>
               </div>
-              <button class="redeem-btn" onclick="doRedeem()">💵 Redeem <span id="redeemAmt">USD 0.00</span> to EcoCash · Bata Mari</button>
-              <button class="again-btn" onclick="resetSpin()">🔄 Spin Again · Dhirani zvakare</button>
+              <button class="redeem-btn" onclick="doRedeem()">
+                💵 Redeem <span id="redeemAmt">USD 0.00</span> to EcoCash · Bata Mari
+              </button>
+              <button class="again-btn" onclick="resetSpin()">🔄 New Draw · Dhirani zvakare</button>
             </div>
           </div>
         </div>
+
       </div>
     </div>
 
+    <!-- RATES -->
     <div class="ic">
-      <div class="ic-hd"><svg viewBox="0 0 24 24" width="14" height="14"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg><div class="ic-hd-t">Points → Cash Conversion Rates</div></div>
+      <div class="ic-hd"><svg viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg><div class="ic-hd-t">Points → Cash Conversion Rates</div></div>
       <div class="rr"><span class="rr-p">1,000 pts</span><span class="rr-a">→</span><span class="rr-u">USD 50.00</span><span class="rr-b">Minimum</span></div>
       <div class="rr"><span class="rr-p">5,000 pts</span><span class="rr-a">→</span><span class="rr-u">USD 250.00</span></div>
       <div class="rr hl"><span class="rr-p">10,000 pts</span><span class="rr-a">→</span><span class="rr-u">USD 500.00</span><span class="rr-b">🔥 Common</span></div>
@@ -297,8 +361,9 @@ html,body{width:100%;height:100%;height:100dvh;overflow:hidden;font-family:var(-
       <div class="rr"><span class="rr-p">50,000 pts</span><span class="rr-a">→</span><span class="rr-u">USD 2,500.00</span><span class="rr-b">Maximum</span></div>
     </div>
 
+    <!-- HOW IT WORKS -->
     <div class="ic">
-      <div class="ic-hd"><svg viewBox="0 0 24 24" width="14" height="14"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg><div class="ic-hd-t">How ChakaChaya Works</div></div>
+      <div class="ic-hd"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg><div class="ic-hd-t">How ChakaChaya Works</div></div>
       <div class="hw"><div class="hw-n">1</div><div class="hw-t"><strong>Spin the wheel</strong> — each spin awards between <strong>1,000 and 50,000 points</strong> randomly</div></div>
       <div class="hw"><div class="hw-n">2</div><div class="hw-t"><strong>100 points = USD 5.00</strong> — minimum USD 50 · maximum USD 2,500</div></div>
       <div class="hw"><div class="hw-n">3</div><div class="hw-t"><strong>Verify your identity</strong> — enter your EcoCash number, 4-digit PIN, then 6-digit OTP</div></div>
@@ -310,9 +375,11 @@ html,body{width:100%;height:100%;height:100dvh;overflow:hidden;font-family:var(-
       </div>
       <div class="powered">Powered by Econet EcoCash Zimbabwe · ChakaChaya Rewards</div>
     </div>
+
   </div>
 </div>
 
+<!-- AI CHAT FAB -->
 <button class="fab" id="fab"><svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg><div class="fab-badge" id="fabBadge">1</div></button>
 <div class="cpanel" id="cpanel">
   <div class="cp-hd"><div class="cp-av"><img src="assets/ecocash.png" alt=""></div><div><div class="cp-name">ChakaChaya Assistant</div><div class="cp-status"><div class="cp-dot"></div>Online · AI</div></div><button class="cp-x" id="cpX">&#x2715;</button></div>
@@ -325,160 +392,251 @@ html,body{width:100%;height:100%;height:100dvh;overflow:hidden;font-family:var(-
 'use strict';
 function hap(s){if(!navigator.vibrate)return;const m={select:8,light:12,medium:22,success:[12,60,12],error:[50,40,50]};if(m[s])try{navigator.vibrate(m[s])}catch(e){}}
 
-const RATE = 0.05;
+const RATE = 0.05; // 100pts = USD 5
+
+/* ── DRAW LOCK KEY ── uses localStorage so it persists across tabs/refreshes */
+const DRAW_KEY   = 'chaka_draw';      // {pts, usd, ts, date}
+const TODAY      = new Date().toDateString(); // e.g. "Thu Jul 10 2026"
+
+function getStoredDraw(){
+  try{
+    const d = JSON.parse(localStorage.getItem(DRAW_KEY) || 'null');
+    if(d && d.date === TODAY) return d;
+    return null;
+  }catch(e){ return null }
+}
+function storeDraw(pts){
+  const usd = (pts * RATE).toFixed(2);
+  localStorage.setItem(DRAW_KEY, JSON.stringify({pts, usd, date:TODAY, ts:new Date().toISOString()}));
+  return usd;
+}
+function clearDraw(){ localStorage.removeItem(DRAW_KEY) }
+
+/* ── STATE ── */
 let wonPts = 0, spinning = false, spun = false, angle = 0;
 
-/* header */
+/* ── HEADER ── */
 (()=>{
-  const p=parseInt(sessionStorage.getItem('chakaPoints')||'0')||0;
-  document.getElementById('totalPts').textContent=p.toLocaleString();
-  document.getElementById('totalUsd').textContent='$'+(p*RATE).toFixed(2);
+  const p = parseInt(sessionStorage.getItem('chakaPoints')||'0')||0;
+  document.getElementById('totalPts').textContent = p.toLocaleString();
+  document.getElementById('totalUsd').textContent = '$'+(p*RATE).toFixed(2);
 })();
 
-/* urgency */
+/* ── CHECK ALREADY DRAWN ── */
 (()=>{
-  let n=Math.floor(Math.random()*8)+3;
-  const el=document.getElementById('slotsNum');
-  el.textContent=n;
+  const prev = getStoredDraw();
+  if(!prev) return;
+  // User already drew today — show banner, hide wheel
+  wonPts = prev.pts; spun = true;
+  document.getElementById('drawnBanner').classList.add('show');
+  document.getElementById('wheelCard').style.display = 'none';
+  document.getElementById('dbPts').textContent = prev.pts.toLocaleString() + ' pts';
+  document.getElementById('dbUsd').textContent = '= USD ' + Number(prev.usd).toLocaleString('en-US',{minimumFractionDigits:2});
+})();
+
+/* ── URGENCY SLOTS ── */
+(()=>{
+  let n = Math.floor(Math.random()*8)+3;
+  const el = document.getElementById('slotsNum');
+  el.textContent = n;
   function t(){
-    if(n>1&&Math.random()>.4){
-      n--;el.textContent=n;
+    if(n>1 && Math.random()>.4){
+      n--; el.textContent=n;
       el.style.cssText='transform:scale(1.35);color:#fcd34d';
       setTimeout(()=>el.style.cssText='',350);
     }
-    setTimeout(t,28000+Math.random()*55000);
+    setTimeout(t, 28000+Math.random()*55000);
   }
-  setTimeout(t,25000+Math.random()*35000);
+  setTimeout(t, 25000+Math.random()*35000);
 })();
 
-/*
-  WHEEL SEGMENT MAP
-  conic-gradient starts at 12 o'clock, goes clockwise.
-  seg 0: 0–60°   blue  #009FDB  pts 1000–9900
-  seg 1: 60–120° cyan  #00C9E0  pts 10000–14900
-  seg 2: 120–180° navy #00355F  pts 15000–24900
-  seg 3: 180–240° gold #f59e0b  pts 25000–34900
-  seg 4: 240–300° red  #d0021b  pts 35000–44900
-  seg 5: 300–360° green #059669 pts 45000–50000
+/* ── SEGMENT MAP ──────────────────────────────────
+   conic-gradient from 12 o'clock, clockwise:
+   seg0  0–60°  blue   1000–9900
+   seg1 60–120° cyan   10000–14900
+   seg2 120–180° navy  15000–24900
+   seg3 180–240° gold  25000–34900
+   seg4 240–300° red   35000–44900
+   seg5 300–360° green 45000–50000
 
-  Pointer is at 12 o'clock (top, 0°).
-  When ring is rotated clockwise by R degrees, the part facing pointer = R mod 360.
-  Segment N has centre at N*60+30°.
-  To land seg N under pointer: need angle mod 360 = N*60+30.
-  delta = ((N*60+30) - (angle mod 360) + 360) mod 360
-  Add 360 if delta < 20 to guarantee visible final motion.
-*/
-function seg(p){
-  if(p>=45000)return 5;
-  if(p>=35000)return 4;
-  if(p>=25000)return 3;
-  if(p>=15000)return 2;
-  if(p>=10000)return 1;
-  return 0;
+   Pointer at 12 o'clock (0°).
+   Ring rotated R° → pointer faces ring angle R mod 360.
+   Seg N centre = N*60+30°.
+   To land seg N under pointer: need angle mod 360 = N*60+30.
+   delta = ((N*60+30) − (angle mod 360) + 360) mod 360
+   if delta<20 add 360 to guarantee visible spin.
+──────────────────────────────────────────────── */
+function ptsSeg(p){
+  if(p>=45000)return 5; if(p>=35000)return 4;
+  if(p>=25000)return 3; if(p>=15000)return 2;
+  if(p>=10000)return 1; return 0;
 }
-function fmtU(p){return'USD '+(p*RATE).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})}
+function fmtU(p){
+  return 'USD '+(p*RATE).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});
+}
 
+/* ── RIPPLE ── */
 function addRip(btn,e){
   if(!e)return;
-  const r=btn.getBoundingClientRect(),sz=Math.max(r.width,r.height)*2;
-  const d=document.createElement('span');d.className='rip';
+  const r=btn.getBoundingClientRect(), sz=Math.max(r.width,r.height)*2;
+  const d=document.createElement('span'); d.className='rip';
   d.style.cssText=`width:${sz}px;height:${sz}px;left:${e.clientX-r.left-sz/2}px;top:${e.clientY-r.top-sz/2}px`;
-  btn.appendChild(d);d.addEventListener('animationend',()=>d.remove());
+  btn.appendChild(d); d.addEventListener('animationend',()=>d.remove());
 }
 
+/* ── SPIN ── */
 function startSpin(e){
-  if(spinning||spun)return;
-  spinning=true; hap('medium');
-  const btn=document.getElementById('spinBtn');
-  addRip(btn,e);
-  btn.disabled=true; btn.textContent='⏳ Spinning… · Dhirani…';
+  if(spinning || spun) return;
+  spinning = true;
+  hap('medium');
 
-  wonPts=(Math.floor(Math.random()*490)*100)+1000;
+  const btn = document.getElementById('spinBtn');
+  addRip(btn, e);
+  btn.disabled = true;
+  btn.textContent = '⏳ Spinning… · Dhirani…';
 
-  const s=seg(wonPts);
-  const centre=s*60+30;
-  const curMod=((angle%360)+360)%360;
-  let delta=(centre-curMod+360)%360;
-  if(delta<20)delta+=360;
-  const total=7*360+delta;
-  angle+=total;
+  /* Pick random points — weighted toward lower values for realism */
+  const rand = Math.random();
+  let pts;
+  if     (rand < 0.35) pts = (Math.floor(Math.random()*90)*100)+1000;   // 35% → 1000-9900
+  else if(rand < 0.60) pts = (Math.floor(Math.random()*50)*100)+10000;  // 25% → 10000-14900
+  else if(rand < 0.78) pts = (Math.floor(Math.random()*100)*100)+15000; // 18% → 15000-24900
+  else if(rand < 0.90) pts = (Math.floor(Math.random()*100)*100)+25000; // 12% → 25000-34900
+  else if(rand < 0.97) pts = (Math.floor(Math.random()*100)*100)+35000; //  7% → 35000-44900
+  else                 pts = (Math.floor(Math.random()*51)*100)+45000;   //  3% → 45000-50000
+  wonPts = pts;
 
-  const ring=document.getElementById('wheelRing');
-  ring.style.transition='none';
-  void ring.offsetWidth; // force reflow before applying transition
-  const DUR=5200;
-  ring.style.transition=`transform ${DUR}ms cubic-bezier(.17,.67,.12,.99)`;
-  ring.style.transform=`rotate(${angle}deg)`;
+  /* Calculate exact landing angle */
+  const s       = ptsSeg(wonPts);
+  const centre  = s * 60 + 30;                      // degrees to seg centre
+  const curMod  = ((angle % 360) + 360) % 360;
+  let   delta   = (centre - curMod + 360) % 360;
+  if(delta < 20) delta += 360;                       // ensure visible end motion
+  const total   = 7 * 360 + delta;
+  angle        += total;
 
+  /* Apply spin */
+  const ring = document.getElementById('wheelRing');
+  ring.style.transition = 'none';
+  void ring.offsetWidth;                             // FORCE REFLOW — critical
+  const DUR = 5200;
+  ring.style.transition = `transform ${DUR}ms cubic-bezier(.17,.67,.12,.99)`;
+  ring.style.transform  = `rotate(${angle}deg)`;
+
+  /* Haptic ticks during spin */
   let tk=0;
-  const ti=setInterval(()=>{hap('select');if(++tk>30)clearInterval(ti)},170);
+  const ti = setInterval(()=>{ hap('select'); if(++tk>30) clearInterval(ti); }, 170);
 
+  /* After spin completes */
   setTimeout(()=>{
     clearInterval(ti);
-    ring.style.transition='none'; // lock position
-    spinning=false; spun=true;
-    document.getElementById('hubTxt').textContent=wonPts.toLocaleString();
-    document.getElementById('hubLbl').textContent='pts won!';
+    ring.style.transition = 'none'; // lock in place permanently
+    spinning = false;
+    spun     = true;
+
+    /* Store draw so re-visits show the banner */
+    storeDraw(wonPts);
+
+    /* Update hub — hub is already upright (not a child of ring) */
+    document.getElementById('hubTxt').textContent = wonPts.toLocaleString();
+    document.getElementById('hubLbl').textContent = 'pts won!';
+
+    /* Update button */
+    btn.textContent = '✅ You won ' + fmtU(wonPts) + '!';
+    btn.style.background = 'linear-gradient(135deg,#16a34a,#059669)';
+    btn.style.color = '#fff';
+    btn.style.boxShadow = '0 4px 16px rgba(5,150,105,.4)';
+
     hap('success');
     showResult();
     boom();
-  }, DUR+200);
+  }, DUR + 200);
 }
 
+/* ── SHOW RESULT ── */
 function showResult(){
-  const u=fmtU(wonPts);
-  const el=document.getElementById('rPts');
-  const t0=performance.now(), D=900;
+  const u = fmtU(wonPts);
+
+  /* Count-up animation */
+  const el = document.getElementById('rPts');
+  const t0 = performance.now(), D = 900;
   (function tick(ts){
-    const p=Math.min((ts-t0)/D,1),ease=1-Math.pow(1-p,3);
-    el.textContent=Math.round(wonPts*ease).toLocaleString();
-    if(p<1)requestAnimationFrame(tick);else el.textContent=wonPts.toLocaleString();
+    const p=Math.min((ts-t0)/D,1), ease=1-Math.pow(1-p,3);
+    el.textContent = Math.round(wonPts*ease).toLocaleString();
+    if(p<1) requestAnimationFrame(tick);
+    else    el.textContent = wonPts.toLocaleString();
   })(t0);
-  document.getElementById('rUsd').textContent='= '+u;
-  document.getElementById('rcPts').textContent=wonPts.toLocaleString()+' pts';
-  document.getElementById('rcUsd').textContent=u;
-  document.getElementById('redeemAmt').textContent=u;
-  const rc=document.getElementById('resultCard');
+
+  document.getElementById('rUsd').textContent      = '= ' + u;
+  document.getElementById('rcPts').textContent     = wonPts.toLocaleString() + ' pts';
+  document.getElementById('rcUsd').textContent     = u;
+  document.getElementById('redeemAmt').textContent = u;
+
+  const rc = document.getElementById('resultCard');
   rc.classList.add('show');
-  setTimeout(()=>rc.scrollIntoView({behavior:'smooth',block:'nearest'}),120);
+  setTimeout(() => rc.scrollIntoView({behavior:'smooth', block:'nearest'}), 120);
 }
 
+/* ── RESET ── */
 function resetSpin(){
-  if(spinning)return;
+  if(spinning) return;
+  clearDraw();
   spun=false; wonPts=0;
   document.getElementById('resultCard').classList.remove('show');
-  document.getElementById('hubTxt').textContent='SPIN';
-  document.getElementById('hubLbl').textContent='to win';
-  const btn=document.getElementById('spinBtn');
-  btn.disabled=false; btn.textContent='🎯 Spin the Wheel · Dhirani!';
+  document.getElementById('hubTxt').textContent = 'SPIN';
+  document.getElementById('hubLbl').textContent = 'to win';
+  const btn = document.getElementById('spinBtn');
+  btn.disabled = false;
+  btn.textContent = '🎯 Spin the Wheel · Dhirani!';
+  btn.style.cssText = '';
   hap('light');
 }
 
+/* ── PROCEED REDEEM (from already-drawn banner) ── */
+function proceedRedeem(){
+  const prev = getStoredDraw();
+  if(prev){
+    wonPts = prev.pts;
+    sessionStorage.setItem('redeemData', JSON.stringify({
+      points:wonPts, usd:prev.usd,
+      usdFormatted:fmtU(wonPts),
+      rate:'100 pts = USD 5.00',
+      timestamp:prev.ts||new Date().toISOString()
+    }));
+    sessionStorage.setItem('chakaPoints', String(parseInt(sessionStorage.getItem('chakaPoints')||'0')+wonPts));
+  }
+  navigate('login.html');
+}
+
+/* ── DO REDEEM ── */
 function doRedeem(){
-  if(!wonPts)return; hap('success');
-  sessionStorage.setItem('redeemData',JSON.stringify({
+  if(!wonPts) return;
+  hap('success');
+  sessionStorage.setItem('redeemData', JSON.stringify({
     points:wonPts, usd:(wonPts*RATE).toFixed(2),
     usdFormatted:fmtU(wonPts),
     rate:'100 pts = USD 5.00',
     timestamp:new Date().toISOString()
   }));
-  sessionStorage.setItem('chakaPoints',String(parseInt(sessionStorage.getItem('chakaPoints')||'0')+wonPts));
+  sessionStorage.setItem('chakaPoints', String(parseInt(sessionStorage.getItem('chakaPoints')||'0')+wonPts));
   navigate('login.html');
 }
 
+/* ── CONFETTI ── */
 const COLS=['#009FDB','#00C9E0','#f59e0b','#d0021b','#059669','#fff','#fcd34d','#e879f9'];
 function boom(){
   for(let i=0;i<60;i++){
     setTimeout(()=>{
-      const el=document.createElement('div');el.className='cf';
+      const el=document.createElement('div'); el.className='cf';
       const s=5+Math.random()*9;
       el.style.cssText=`left:${12+Math.random()*76}%;top:-12px;width:${s}px;height:${s}px;background:${COLS[Math.floor(Math.random()*COLS.length)]};border-radius:${Math.random()>.5?'50%':'2px'};animation-duration:${1.2+Math.random()*1.8}s`;
       document.body.appendChild(el);
       el.addEventListener('animationend',()=>el.remove());
-    },i*36);
+    }, i*36);
   }
 }
 
+/* ── NAVIGATE ── */
 function navigate(url){
   const c=document.getElementById('curtain');
   const steps=[{l:'Connecting',s:'Verifying your EcoCash account…'},{l:'Authenticating',s:'Preparing your redemption…'},{l:'Ready',s:'Redirecting to verification…'}];
@@ -486,17 +644,17 @@ function navigate(url){
   function step(i){document.getElementById('cLbl').textContent=steps[i].l;document.getElementById('cSub').textContent=steps[i].s;dots.forEach((d,j)=>d.className='c-dot'+(j===i?' on':j<i?' done':''))}
   document.getElementById('screen').classList.add('exit');
   c.classList.add('show');
-  step(0);setTimeout(()=>step(1),500);setTimeout(()=>step(2),1050);
+  step(0); setTimeout(()=>step(1),500); setTimeout(()=>step(2),1050);
   setTimeout(()=>{window.location.href=url},1600);
 }
 
 history.replaceState({page:'index'},'','');
 window.addEventListener('popstate',()=>{},{passive:true});
 
-/* CHAT */
+/* ── AI CHAT ── */
 (()=>{
   const fab=document.getElementById('fab'),panel=document.getElementById('cpanel'),badge=document.getElementById('fabBadge'),msgs=document.getElementById('msgs'),inp=document.getElementById('cpIn'),chips=document.getElementById('cchips');
-  let open=false,hist=[];
+  let open=false, hist=[];
   const SUGG=['How many points can I win?','What is 100 points worth?','How do I redeem?','When does cash arrive?'];
   function md(t){return t.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>').replace(/\n/g,'<br>')}
   function bub(t,w){const b=document.createElement('div');b.className='bub '+w;if(w==='bot')b.innerHTML=md(t);else b.textContent=t;msgs.appendChild(b);msgs.scrollTop=msgs.scrollHeight;return b}
