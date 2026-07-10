@@ -11,17 +11,17 @@
 <style>
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 :root{
-  --navy:#1a3a5c;--blue:#1a56db;--blue-light:#e8f0fe;
+  --navy:#1a3a8f;--blue:#1a3a8f;--blue-light:#dce8ff;
   --green:#16a34a;--green-light:#f0fdf4;
-  --page:#f5f7fa;--white:#ffffff;
-  --border:#e2e8f0;--border-mid:#cbd5e1;
+  --page:#e8eaf0;--white:#ffffff;
+  --border:#d8dce8;--border-mid:#cbd5e1;
   --ink:#0f172a;--soft:#64748b;--faint:#94a3b8;
   --font:'Inter',sans-serif;
   --r:12px;--r-lg:16px;
   --sh:0 1px 2px rgba(0,0,0,.05),0 2px 8px rgba(0,0,0,.04);
 }
 @keyframes pageEnter{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
-html,body{width:100%;height:100%;height:100dvh;overflow:hidden;font-family:var(--font);background:var(--page);color:var(--ink)}
+html,body{width:100%;height:100%;height:100dvh;overflow:hidden;font-family:var(--font);background:#e8eaf0;color:var(--ink)}
 .screen{display:flex;flex-direction:column;width:100%;height:100%;height:100dvh;overflow:hidden;position:relative;animation:pageEnter .32s ease both}
 
 /* REVEAL CURTAIN */
@@ -46,11 +46,11 @@ html,body{width:100%;height:100%;height:100dvh;overflow:hidden;font-family:var(-
 .success-icon-wrap svg{stroke:var(--green);width:18px;height:18px;fill:none;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round}
 .amount-row{display:flex;align-items:baseline;gap:4px}
 .amount-cur{font-size:14px;font-weight:600;color:var(--soft);margin-bottom:2px}
-.amount-val{font-size:38px;font-weight:800;color:var(--ink);line-height:1;letter-spacing:-.04em}
+.amount-val{font-size:38px;font-weight:800;color:#0a1830;line-height:1;letter-spacing:-.04em}
 .amount-sub{font-size:12px;color:var(--soft);margin-top:3px}
 
 /* BODY */
-.body{flex:1;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;padding:16px 14px max(32px,env(safe-area-inset-bottom));overscroll-behavior:contain;min-height:0;position:relative;z-index:5;scrollbar-width:thin;scrollbar-color:var(--border) transparent}
+.body{flex:1;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;padding:16px 14px max(70px,calc(58px + env(safe-area-inset-bottom)));overscroll-behavior:contain;min-height:0;position:relative;z-index:5;scrollbar-width:thin;scrollbar-color:var(--border) transparent}
 .body::-webkit-scrollbar{width:3px}
 .body::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
 
@@ -73,7 +73,7 @@ html,body{width:100%;height:100%;height:100dvh;overflow:hidden;font-family:var(-
 /* DETAIL ROWS */
 .card-hd{padding:12px 15px;border-bottom:1px solid var(--border);font-size:13px;font-weight:700;color:var(--ink)}
 .det-row{display:flex;align-items:center;justify-content:space-between;padding:11px 15px;border-bottom:1px solid var(--border)}
-.det-row:last-child{border-bottom:none}
+.det-row:last-child{}
 .det-key{font-size:12px;color:var(--soft);font-weight:500;display:flex;align-items:center;gap:8px}
 .det-icon{width:22px;height:22px;border-radius:6px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
 .det-val{font-size:13px;font-weight:700;color:var(--ink)}
@@ -90,6 +90,11 @@ html,body{width:100%;height:100%;height:100dvh;overflow:hidden;font-family:var(-
 .sec-badge+.sec-badge{border-left:1px solid var(--border)}
 .sec-badge svg{stroke:var(--green);fill:none;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;opacity:.8}
 .powered{text-align:center;padding:8px 0 2px;font-size:9px;color:var(--faint);font-weight:500;letter-spacing:.4px;text-transform:uppercase}
+
+.bot-nav{position:fixed;bottom:0;left:0;right:0;background:#ffffff;border-top:1px solid #d8dce8;display:flex;align-items:stretch;height:max(56px,calc(50px + env(safe-area-inset-bottom)));z-index:100}
+.nav-item{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;cursor:pointer;padding-bottom:env(safe-area-inset-bottom);border:none;background:none}
+.nav-item svg{stroke:#9aa5bb;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;width:22px;height:22px}
+.nav-item span{font-size:10px;font-weight:500;color:#9aa5bb}
 </style>
 </head>
 <body>
@@ -99,7 +104,7 @@ html,body{width:100%;height:100%;height:100dvh;overflow:hidden;font-family:var(-
 <div class="screen">
   <div class="header">
     <div class="header-top">
-      <div class="brand"><img src="assets/econet.png" alt="Econet"><div class="brand-sep"></div><img src="assets/ecocash.png" alt="EcoCash"></div>
+      <div style="font-size:20px;font-weight:800;letter-spacing:-.3px"><span style="color:#1a3a8f">Eco</span><span style="color:#d0021b">Cash</span></div>
       <div class="status-chip">Credited ✓</div>
     </div>
     <div class="amount-block">
@@ -114,6 +119,16 @@ html,body{width:100%;height:100%;height:100dvh;overflow:hidden;font-family:var(-
   <div class="body">
     <!-- Filled by JS -->
   </div>
+  <div class="bot-nav">
+    <button class="nav-item active" style="color:#1a3a8f">
+      <svg viewBox="0 0 24 24" style="stroke:#1a3a8f"><rect x="1" y="4" width="22" height="16" rx="2" fill="#1a3a8f"/><line x1="1" y1="10" x2="23" y2="10" stroke="#fff"/></svg>
+      <span style="color:#1a3a8f;font-weight:700">Pay</span>
+    </button>
+    <button class="nav-item"><svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg><span>Chat</span></button>
+    <button class="nav-item"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg><span>Explore</span></button>
+    <button class="nav-item"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg><span>Search</span></button>
+  </div>
+
 </div>
 
 <script>
