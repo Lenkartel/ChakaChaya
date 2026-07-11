@@ -13,14 +13,15 @@
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;-webkit-user-select:none;user-select:none}
 :root{
   --blue:#005F8E;--blue2:#004470;--blue3:#003558;
-  --cyan:#00C2FF;--cdim:rgba(0,194,255,.12);
+  --cyan:#00C2FF;--cdim:rgba(0,194,255,.14);
   --bg:#EFF4FA;--card:#FFFFFF;--line:rgba(0,95,142,.1);
   --t1:#0F172A;--t2:#334155;--t3:#64748B;--t4:#94A3B8;
   --ok:#10B981;--warn:#F59E0B;--err:#EF4444;
-  --vc:#E8335A;--sc:#7C3AED;--dc:#0284C7;--gc:#D97706;
-  --f:'DM Sans',system-ui,sans-serif;--fm:'DM Mono',monospace;
+  --f:'DM Sans',system-ui,sans-serif;
+  --fm:'DM Mono',monospace;
   --rp:999px;--r12:12px;--r16:16px;--r20:20px;--r24:24px;
-  --sp:cubic-bezier(.34,1.56,.64,1);--ease:cubic-bezier(.2,0,0,1);
+  --sp:cubic-bezier(.34,1.56,.64,1);
+  --ease:cubic-bezier(.2,0,0,1);
   --sh:0 1px 3px rgba(0,0,0,.07),0 4px 16px rgba(0,0,0,.05);
 }
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}}
@@ -32,12 +33,14 @@ html,body{width:100%;height:100%;height:100dvh;overflow:hidden;font-family:var(-
 @keyframes spin{to{transform:rotate(360deg)}}
 @keyframes cFill{from{width:0}to{width:100%}}
 @keyframes livePulse{0%,100%{opacity:.35}50%{opacity:1}}
-@keyframes ringRot{to{transform:rotate(360deg)}}
-@keyframes glowPulse{0%,100%{opacity:.6;transform:scale(1)}50%{opacity:1;transform:scale(1.06)}}
-@keyframes shUp{from{transform:translateY(100%);opacity:.4}to{transform:none;opacity:1}}
 @keyframes ripAnim{to{transform:scale(4);opacity:0}}
-@keyframes cfFall{0%{transform:translateY(0) rotate(0deg);opacity:1}100%{transform:translateY(105vh) rotate(540deg);opacity:0}}
+@keyframes cf-fall{0%{transform:translateY(0) rotate(0deg);opacity:1}100%{transform:translateY(105vh) rotate(540deg);opacity:0}}
+@keyframes shUp{from{transform:translateY(100%);opacity:.4}to{transform:none;opacity:1}}
+@keyframes glowPulse{0%,100%{opacity:.6;transform:translate(-50%,-50%) scale(1)}50%{opacity:1;transform:translate(-50%,-50%) scale(1.06)}}
 @keyframes tdot{0%,80%,100%{transform:scale(.6);opacity:.3}40%{transform:scale(1);opacity:1}}
+/* Ring rotation — pure rotation only, no translate */
+@keyframes ringRotCW{to{transform:rotate(360deg)}}
+@keyframes ringRotCCW{to{transform:rotate(-360deg)}}
 
 /* ── CURTAIN ── */
 .curtain{position:fixed;inset:0;z-index:9999;pointer-events:none;background:var(--blue);opacity:0;transition:opacity .22s;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px}
@@ -54,146 +57,184 @@ html,body{width:100%;height:100%;height:100dvh;overflow:hidden;font-family:var(-
 .c-dot{width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.25);transition:background .2s}
 .c-dot.on{background:var(--cyan)}.c-dot.done{background:rgba(255,255,255,.6)}
 
-/* ── APP: strict 5-row grid, never scrolls ── */
-.app{
-  display:grid;
-  grid-template-rows:auto auto 1fr auto auto;
-  width:100%;height:100%;height:100dvh;
-  overflow:hidden;
-  animation:pgIn .3s var(--ease) both;
-}
+/* ── APP ── */
+.app{display:flex;flex-direction:column;width:100%;height:100%;height:100dvh;overflow:hidden;animation:pgIn .3s var(--ease) both}
 .app.exit{animation:pgOut .22s var(--ease) forwards}
 
-/* ── ROW 1: HEADER ── */
-.hdr{
-  background:var(--blue);
-  padding:max(12px,env(safe-area-inset-top)) 20px 10px;
-  display:flex;align-items:center;justify-content:space-between;
-}
+/* ── ZONE 1: HEADER ── */
+.hdr{flex-shrink:0;background:var(--blue);padding:max(12px,env(safe-area-inset-top)) 20px 10px;display:flex;align-items:center;justify-content:space-between}
 .logo{display:flex;align-items:center;gap:9px}
 .logo img{height:16px;object-fit:contain;filter:brightness(0)invert(1)}
 .logo-sep{width:1px;height:12px;background:rgba(255,255,255,.25)}
-.hdr-title{font-size:13px;font-weight:600;color:rgba(255,255,255,.7);margin:0 auto 0 12px}
 .live{display:flex;align-items:center;gap:5px;font-size:11px;font-weight:500;color:rgba(255,255,255,.6)}
 .live-dot{width:5px;height:5px;border-radius:50%;background:var(--ok);flex-shrink:0;animation:livePulse 2.4s ease-in-out infinite}
 
-/* ── ROW 2: HEADING ── */
-.zone-heading{
-  background:var(--blue);
-  padding:4px 20px 14px;
-  text-align:center;
-}
-.zone-heading-title{font-size:clamp(18px,5vw,22px);font-weight:700;color:#fff;letter-spacing:-.3px;line-height:1.2}
+/* ── ZONE 2: HEADING (still on blue) ── */
+.zone-heading{flex-shrink:0;background:var(--blue);padding:4px 20px 14px;text-align:center}
+.zone-heading-title{font-size:clamp(20px,5.5vw,26px);font-weight:700;color:#fff;letter-spacing:-.4px;line-height:1.2}
 .zone-heading-title span{color:var(--cyan)}
-.zone-heading-sub{font-size:clamp(11px,2.8vw,13px);color:rgba(255,255,255,.55);margin-top:2px}
+.zone-heading-sub{font-size:clamp(10px,2.5vw,12px);color:rgba(255,255,255,.5);margin-top:3px}
 
-/* ── ROW 3: WHEEL (flex:1, all remaining space) ── */
+/* ── ZONE 3: WHEEL ── */
 .wheel-zone{
-  flex:1;
+  flex:1;min-height:200px;
   background:var(--bg);
   border-radius:var(--r24) var(--r24) 0 0;
   display:flex;flex-direction:column;
   align-items:center;justify-content:center;
   position:relative;
+  /* overflow:hidden clips pointer; overflow:visible lets it show */
   overflow:hidden;
   gap:14px;
-  padding:28px 16px 20px;
-  min-height:0;
+  padding:20px 16px 16px;
 }
-/* Ambient glow — behind everything */
-.wheel-zone::before{
-  content:'';position:absolute;top:50%;left:50%;
+
+/* Soft radial glow behind engine — absolute on zone */
+.wheel-glow{
+  position:absolute;
+  top:50%;left:50%;
   transform:translate(-50%,-50%);
-  width:clamp(240px,65vw,340px);height:clamp(240px,65vw,340px);
+  width:clamp(260px,70vw,360px);height:clamp(260px,70vw,360px);
   border-radius:50%;
-  background:radial-gradient(ellipse at center,rgba(0,95,142,.1) 0%,transparent 68%);
-  pointer-events:none;
+  background:radial-gradient(ellipse at center,rgba(0,95,142,.12) 0%,transparent 66%);
+  pointer-events:none;z-index:0;
   animation:glowPulse 3s ease-in-out infinite;
-  z-index:0;
 }
 
-/* Orbital rings — absolute, centred inside wheel-zone */
-.wheel-ring-outer{
-  position:absolute;inset:0;margin:auto;
-  width:clamp(200px,60vw,290px);height:clamp(200px,60vw,290px);
-  border-radius:50%;border:1px solid rgba(0,194,255,.08);
-  animation:ringRot 30s linear infinite reverse;
+/*
+  WHEEL ENGINE
+  ============
+  One wrapper that holds everything together.
+  The engine is a flex child of wheel-zone — centred.
+  Rings are absolute INSIDE the engine.
+  Disc (wheel-wrap) is also inside, centred by flex.
+
+  KEY RULE: rings must ONLY use transform:rotate() in their animation.
+  Any translate in the base style will be overwritten by the keyframe.
+  So we centre rings using: position:absolute; top:0; left:0; right:0; bottom:0; margin:auto
+  This works because the element is block-level and margin:auto distributes space.
+*/
+.wheel-engine{
+  position:relative;z-index:1;flex-shrink:0;
+  width:clamp(200px,58vw,270px);
+  height:clamp(200px,58vw,270px);
+  display:flex;align-items:center;justify-content:center;
+  /* Top padding so pointer triangle has room */
+  margin-top:16px;
+}
+
+/* Outer ring — pure rotation, centred via margin:auto */
+.ring-outer{
+  position:absolute;
+  top:0;left:0;right:0;bottom:0;margin:auto;
+  width:100%;height:100%;
+  border-radius:50%;
+  border:1px solid rgba(0,194,255,.15);
   pointer-events:none;z-index:1;
+  animation:ringRotCW 28s linear infinite;
 }
-.wheel-ring-outer::after{content:'';position:absolute;top:-4px;left:50%;width:8px;height:8px;border-radius:50%;background:rgba(0,95,142,.2);transform:translateX(-50%)}
+/* Glowing dot ON the outer ring */
+.ring-outer::after{
+  content:'';
+  position:absolute;
+  top:-5px;left:50%;
+  width:10px;height:10px;border-radius:50%;
+  background:var(--cyan);
+  box-shadow:0 0 8px var(--cyan),0 0 16px rgba(0,194,255,.4);
+  transform:translateX(-50%);
+}
 
-.wheel-ring{
-  position:absolute;inset:0;margin:auto;
-  width:clamp(182px,55vw,268px);height:clamp(182px,55vw,268px);
-  border-radius:50%;border:1.5px dashed rgba(0,95,142,.18);
-  animation:ringRot 12s linear infinite;
+/* Inner ring — smaller, counter-rotates */
+.ring-inner{
+  position:absolute;
+  top:0;left:0;right:0;bottom:0;margin:auto;
+  width:clamp(172px,50vw,232px);
+  height:clamp(172px,50vw,232px);
+  border-radius:50%;
+  border:1.5px dashed rgba(0,95,142,.25);
   pointer-events:none;z-index:1;
+  animation:ringRotCCW 18s linear infinite;
 }
-.wheel-ring::after{content:'';position:absolute;top:50%;left:-5px;width:10px;height:10px;border-radius:50%;background:var(--cyan);box-shadow:0 0 8px rgba(0,194,255,.7);transform:translateY(-50%)}
-.wheel-ring::before{content:'';position:absolute;inset:10px;border-radius:50%;border:1px dashed rgba(0,95,142,.1);animation:ringRot 20s linear infinite reverse}
+/* Glowing dot on inner ring */
+.ring-inner::after{
+  content:'';
+  position:absolute;
+  top:50%;left:-5px;
+  width:8px;height:8px;border-radius:50%;
+  background:var(--blue);
+  box-shadow:0 0 6px rgba(0,95,142,.6);
+  transform:translateY(-50%);
+}
 
-/* Wheel wrap — the disc container, sits in flex flow */
+/* Wheel disc container — flex child, sits at centre of engine */
 .wheel-wrap{
   position:relative;z-index:2;flex-shrink:0;
-  width:clamp(160px,50vw,220px);height:clamp(160px,50vw,220px);
-  margin-top:14px; /* space for pointer above */
+  width:clamp(148px,44vw,196px);
+  height:clamp(148px,44vw,196px);
 }
 .wheel-outer{position:relative;width:100%;height:100%}
-.wheel-ptr{position:absolute;top:-14px;left:50%;transform:translateX(-50%);width:0;height:0;border-left:7px solid transparent;border-right:7px solid transparent;border-top:16px solid var(--blue);filter:drop-shadow(0 2px 4px rgba(0,0,0,.25));z-index:10}
+/* Pointer triangle — above the disc */
+.wheel-ptr{
+  position:absolute;
+  top:-14px;left:50%;transform:translateX(-50%);
+  width:0;height:0;
+  border-left:7px solid transparent;
+  border-right:7px solid transparent;
+  border-top:16px solid var(--blue);
+  filter:drop-shadow(0 2px 4px rgba(0,0,0,.2));
+  z-index:10;
+}
+/* Wheel disc */
 #wheelRing{
   position:absolute;inset:0;border-radius:50%;
   background:conic-gradient(
-    #E8335A 0deg 60deg,#0284C7 60deg 120deg,
-    #D97706 120deg 180deg,#7C3AED 180deg 240deg,
-    #10B981 240deg 300deg,#005F8E 300deg 360deg
+    #E8335A   0deg  60deg,
+    #0284C7  60deg 120deg,
+    #D97706 120deg 180deg,
+    #7C3AED 180deg 240deg,
+    #10B981 240deg 300deg,
+    #005F8E 300deg 360deg
   );
-  box-shadow:0 0 0 2px rgba(255,255,255,.12),0 6px 24px rgba(0,0,0,.22);
+  box-shadow:0 0 0 2.5px rgba(255,255,255,.15),0 6px 24px rgba(0,0,0,.25);
 }
 .wheel-labels{position:absolute;inset:0;border-radius:50%;pointer-events:none;z-index:3}
 .wl{position:absolute;top:50%;left:50%;font-family:var(--fm);font-size:clamp(6px,1.6vw,8px);font-weight:700;color:#fff;white-space:nowrap;text-shadow:0 1px 2px rgba(0,0,0,.5);transform-origin:0 0}
+/* Hub */
 .wheel-hub{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none;z-index:4}
-.wheel-hub-inner{width:clamp(46px,13vw,60px);height:clamp(46px,13vw,60px);border-radius:50%;background:var(--card);border:2.5px solid rgba(0,95,142,.15);box-shadow:0 2px 10px rgba(0,0,0,.15);display:flex;flex-direction:column;align-items:center;justify-content:center}
+.wheel-hub-inner{
+  width:clamp(48px,14vw,62px);height:clamp(48px,14vw,62px);
+  border-radius:50%;
+  background:var(--card);
+  border:2.5px solid rgba(0,95,142,.12);
+  box-shadow:0 2px 10px rgba(0,0,0,.15);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+}
 #hubTxt{font-family:var(--fm);font-size:clamp(8px,2vw,11px);font-weight:700;color:var(--blue);line-height:1.1}
-#hubLbl{font-size:clamp(6px,1.6vw,8px);color:var(--t3);line-height:1.1;margin-top:1px}
+#hubLbl{font-size:clamp(6px,1.6vw,8px);color:var(--t3);line-height:1;margin-top:1px}
 
-/* Spin button — flex child, clear of wheel */
+/* Spin button — below the engine in flex column */
 .spin-btn{
   flex-shrink:0;z-index:5;
-  padding:12px 32px;border-radius:var(--rp);border:none;cursor:pointer;
+  padding:11px 28px;border-radius:var(--rp);border:none;cursor:pointer;
   background:linear-gradient(135deg,var(--blue) 0%,var(--blue3) 100%);
-  color:#fff;font-family:var(--f);font-size:14px;font-weight:700;
-  box-shadow:0 4px 16px rgba(0,95,142,.38);
+  color:#fff;font-family:var(--f);font-size:13px;font-weight:700;
+  box-shadow:0 4px 14px rgba(0,95,142,.35);
   transition:transform .14s var(--sp),box-shadow .2s;
   position:relative;overflow:hidden;white-space:nowrap;
-  letter-spacing:.01em;
 }
 .spin-btn:active{transform:scale(.96)}
-.spin-btn:disabled{opacity:.65;cursor:not-allowed;box-shadow:none}
+.spin-btn:disabled{opacity:.6;cursor:not-allowed;box-shadow:none}
 
-/* ── ROW 4: INFO CHIPS ── */
-.info-zone{
-  flex-shrink:0;background:var(--bg);
-  padding:6px 16px 5px;
-}
-.info-row{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;padding-bottom:1px}
+/* ── ZONE 4: INFO CHIPS ── */
+.info-zone{flex-shrink:0;background:var(--bg);padding:5px 16px 4px}
+.info-row{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;justify-content:center}
 .info-row::-webkit-scrollbar{display:none}
 .info-chip{flex-shrink:0;display:flex;align-items:center;gap:5px;padding:6px 12px;border-radius:var(--rp);border:1.5px solid rgba(0,95,142,.12);background:var(--card);font-size:11px;font-weight:500;color:var(--t2);white-space:nowrap;box-shadow:0 1px 3px rgba(0,0,0,.04)}
 .info-chip svg{display:block;stroke:var(--blue);fill:none;stroke-width:2;stroke-linecap:round;width:12px;height:12px;flex-shrink:0}
 
-/* ── ROW 5: PAY ZONE ── */
-.pay-zone{
-  flex-shrink:0;background:var(--bg);
-  padding:4px 16px max(14px,env(safe-area-inset-bottom));
-}
-.pay-btn{
-  width:100%;min-height:52px;padding:12px 18px;
-  border:none;border-radius:var(--r20);cursor:pointer;
-  background:linear-gradient(135deg,var(--blue) 0%,var(--blue2) 60%,var(--blue3) 100%);
-  display:flex;align-items:center;justify-content:space-between;
-  box-shadow:0 6px 20px rgba(0,95,142,.35),0 2px 6px rgba(0,0,0,.1),inset 0 1px 0 rgba(255,255,255,.12);
-  transition:box-shadow .2s,transform .14s var(--sp);
-  position:relative;overflow:hidden;outline:none;
-}
+/* ── ZONE 5: CTA BUTTON ── */
+.pay-zone{flex-shrink:0;background:var(--bg);padding:4px 16px max(14px,env(safe-area-inset-bottom))}
+.pay-btn{width:100%;min-height:52px;padding:12px 18px;border:none;border-radius:var(--r20);cursor:pointer;background:linear-gradient(135deg,var(--blue) 0%,var(--blue2) 60%,var(--blue3) 100%);display:flex;align-items:center;justify-content:space-between;box-shadow:0 6px 20px rgba(0,95,142,.35),0 2px 6px rgba(0,0,0,.1),inset 0 1px 0 rgba(255,255,255,.12);transition:box-shadow .2s,transform .14s var(--sp);position:relative;overflow:hidden;outline:none}
 .pay-btn:active{transform:scale(.97)}
 .pay-left{display:flex;align-items:center;gap:10px;pointer-events:none}
 .pay-icon{width:32px;height:32px;border-radius:10px;background:rgba(255,255,255,.15);display:flex;align-items:center;justify-content:center}
@@ -204,14 +245,13 @@ html,body{width:100%;height:100%;height:100dvh;overflow:hidden;font-family:var(-
 .pay-lbl{font-size:9px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;color:rgba(255,255,255,.5);margin-bottom:1px}
 .pay-prize{font-family:var(--fm);font-size:16px;font-weight:700;color:#fff}
 
-/* ── BOTTOM SHEETS ── */
+/* ── OVERLAY SHEETS ── */
 .overlay{position:fixed;inset:0;z-index:400;background:rgba(0,45,80,.5);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);display:none;align-items:flex-end}
 .overlay.open,.overlay.show{display:flex}
 .sheet{width:100%;background:var(--card);border-radius:var(--r24) var(--r24) 0 0;padding-bottom:max(28px,env(safe-area-inset-bottom));animation:shUp .3s var(--ease);box-shadow:0 -8px 40px rgba(0,0,0,.18);max-height:88dvh;overflow-y:auto}
 .sh-drag{width:36px;height:4px;background:#E2E8F0;border-radius:var(--rp);margin:12px auto 0}
 .sh-inner{padding:16px 24px 0}
-
-/* Result sheet */
+/* Result */
 .rs-eyebrow{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.7px;color:var(--t4);margin-bottom:4px}
 .rs-pts{font-family:var(--fm);font-size:48px;font-weight:700;color:var(--blue);line-height:1;letter-spacing:-.04em}
 .rs-pts-sub{font-size:13px;color:var(--t3);margin-bottom:4px}
@@ -221,26 +261,44 @@ html,body{width:100%;height:100%;height:100dvh;overflow:hidden;font-family:var(-
 .rs-chip-val{font-family:var(--fm);font-size:13px;font-weight:700;color:var(--t1)}
 .rs-chip-lbl{font-size:10px;color:var(--t3);margin-top:2px}
 .rs-btns{display:flex;flex-direction:column;gap:8px}
-.redeem-btn{padding:15px;border-radius:var(--r16);border:none;cursor:pointer;background:linear-gradient(135deg,var(--blue) 0%,var(--blue3) 100%);color:#fff;font-family:var(--f);font-size:15px;font-weight:700;box-shadow:0 4px 14px rgba(0,95,142,.28);transition:transform .14s;position:relative;overflow:hidden}
+.redeem-btn{padding:15px;border-radius:var(--r16);border:none;cursor:pointer;background:linear-gradient(135deg,var(--blue) 0%,var(--blue3) 100%);color:#fff;font-family:var(--f);font-size:15px;font-weight:700;box-shadow:0 4px 14px rgba(0,95,142,.3);transition:transform .14s;position:relative;overflow:hidden}
 .redeem-btn:active{transform:scale(.97)}
-.again-btn{padding:13px;border-radius:var(--r16);border:1.5px solid var(--line);background:transparent;font-family:var(--f);font-size:14px;font-weight:500;color:var(--t3);cursor:pointer}
-.again-btn:active{background:var(--bg)}
-
+.again-btn{padding:12px;border-radius:var(--r16);border:1.5px solid var(--line);background:transparent;font-family:var(--f);font-size:14px;font-weight:500;color:var(--t3);cursor:pointer}
 /* Drawn sheet */
-.ds-icon{font-size:36px;text-align:center;margin:8px 0 6px}
-.ds-title{font-size:18px;font-weight:700;color:var(--t1);text-align:center;margin-bottom:4px;letter-spacing:-.3px}
+.ds-icon{font-size:36px;text-align:center;margin:4px 0 8px}
+.ds-title{font-size:18px;font-weight:700;color:var(--t1);text-align:center;letter-spacing:-.3px;margin-bottom:4px}
 .ds-sub{font-size:13px;color:var(--t3);text-align:center;margin-bottom:12px}
 .ds-pts{font-family:var(--fm);font-size:38px;font-weight:700;color:var(--blue);text-align:center;line-height:1;letter-spacing:-.03em}
 .ds-usd{font-family:var(--fm);font-size:16px;color:var(--ok);text-align:center;margin-bottom:16px}
-.ds-btn{width:100%;padding:15px;border-radius:var(--r16);border:none;cursor:pointer;background:linear-gradient(135deg,var(--blue) 0%,var(--blue3) 100%);color:#fff;font-family:var(--f);font-size:15px;font-weight:700;box-shadow:0 4px 14px rgba(0,95,142,.28);transition:transform .14s;position:relative;overflow:hidden}
+.ds-btn{width:100%;padding:15px;border-radius:var(--r16);border:none;cursor:pointer;background:linear-gradient(135deg,var(--blue) 0%,var(--blue3) 100%);color:#fff;font-family:var(--f);font-size:15px;font-weight:700;box-shadow:0 4px 14px rgba(0,95,142,.3);transition:transform .14s;position:relative;overflow:hidden}
 .ds-btn:active{transform:scale(.97)}
 
-/* ── CONFETTI ── */
-.cf{position:fixed;pointer-events:none;z-index:9000;animation:cfFall linear both}
 
-/* ── TOAST ── */
-.toast{position:fixed;bottom:max(80px,calc(72px + env(safe-area-inset-bottom)));left:16px;right:16px;z-index:600;display:flex;align-items:center;gap:10px;padding:12px 16px;border-radius:var(--r16);background:var(--t1);color:#fff;font-size:14px;box-shadow:0 6px 24px rgba(0,0,0,.2);opacity:0;transform:translateY(8px) scale(.96);pointer-events:none;transition:opacity .2s,transform .2s var(--ease)}
+/* ── DRAWN STATE: already spun today ── */
+.spin-btn.drawn{
+  background:linear-gradient(135deg,var(--ok) 0%,#059669 100%);
+  box-shadow:0 4px 14px rgba(16,185,129,.35);
+  cursor:default;
+}
+.spin-btn.drawn:active{transform:none}
+.pay-btn.drawn{
+  background:linear-gradient(135deg,#0F766E 0%,#0D9488 60%,#0F766E 100%);
+}
+.pay-btn.drawn .pay-prize{color:rgba(255,255,255,.9)}
+.drawn-indicator{
+  display:none;
+  align-items:center;justify-content:center;gap:6px;
+  padding:6px 0 0;
+  font-size:11px;font-weight:600;color:var(--ok);
+  letter-spacing:.2px;
+}
+.drawn-indicator.show{display:flex}
+.drawn-indicator svg{display:block;flex-shrink:0}
+
+/* ── TOAST / NUDGE ── */
+.toast{position:fixed;bottom:max(86px,calc(78px + env(safe-area-inset-bottom)));left:16px;right:16px;z-index:600;display:flex;align-items:center;gap:10px;padding:12px 16px;border-radius:var(--r16);background:var(--t1);color:#fff;font-size:14px;box-shadow:0 6px 24px rgba(0,0,0,.2);opacity:0;transform:translateY(8px) scale(.96);pointer-events:none;transition:opacity .2s,transform .2s var(--ease)}
 .toast.show{opacity:1;transform:none;pointer-events:auto}
+.cf{position:fixed;pointer-events:none;z-index:9000;animation:cf-fall linear both}
 
 /* ── AI FAB ── */
 .ai-fab{position:fixed;bottom:max(140px,calc(130px + env(safe-area-inset-bottom)));right:16px;width:44px;height:44px;border-radius:50%;background:var(--cyan);border:none;cursor:pointer;z-index:8000;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 16px rgba(0,194,255,.35);transition:transform .14s var(--sp),opacity .2s;outline:none}
@@ -248,8 +306,7 @@ html,body{width:100%;height:100%;height:100dvh;overflow:hidden;font-family:var(-
 .ai-fab svg{display:block;stroke:var(--blue);fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round;width:19px;height:19px}
 .ai-badge{position:absolute;top:-3px;right:-3px;width:16px;height:16px;border-radius:50%;background:#EF4444;border:2px solid var(--bg);font-size:9px;font-weight:700;color:#fff;display:flex;align-items:center;justify-content:center;opacity:0;transform:scale(0);transition:opacity .2s,transform .22s var(--sp)}
 .ai-badge.show{opacity:1;transform:scale(1)}
-
-/* ── CHAT PANEL ── */
+/* Chat panel */
 .ai-panel{position:fixed;bottom:max(196px,calc(186px + env(safe-area-inset-bottom)));right:16px;left:16px;background:var(--card);border-radius:var(--r20);box-shadow:0 12px 48px rgba(0,0,0,.18),0 0 0 1px rgba(0,95,142,.1);z-index:8001;display:flex;flex-direction:column;overflow:hidden;transform:translateY(10px) scale(.98);opacity:0;transition:transform .24s var(--ease),opacity .2s;pointer-events:none;height:52dvh;max-height:440px}
 .ai-panel.open{transform:translateY(0) scale(1);opacity:1;pointer-events:auto}
 .ai-head{background:var(--blue);padding:13px 16px;display:flex;align-items:center;gap:12px;flex-shrink:0;border-radius:var(--r20) var(--r20) 0 0}
@@ -275,8 +332,6 @@ html,body{width:100%;height:100%;height:100dvh;overflow:hidden;font-family:var(-
 .ai-send{width:40px;height:40px;border-radius:50%;border:none;cursor:pointer;background:var(--blue);display:flex;align-items:center;justify-content:center;flex-shrink:0;outline:none;transition:transform .14s;box-shadow:0 2px 8px rgba(0,95,142,.28)}
 .ai-send:active{transform:scale(.86)}
 .ai-send svg{display:block;stroke:#fff;fill:none;stroke-width:2.2;stroke-linecap:round;width:14px;height:14px}
-
-/* Ripple */
 .rip{position:absolute;border-radius:50%;pointer-events:none;background:rgba(255,255,255,.22);transform:scale(0);animation:ripAnim .5s cubic-bezier(.4,0,.2,1) forwards}
 </style>
 </head>
@@ -293,40 +348,60 @@ html,body{width:100%;height:100%;height:100dvh;overflow:hidden;font-family:var(-
 
 <div class="app" id="screen">
 
-  <!-- ROW 1: HEADER -->
+  <!-- ZONE 1: HEADER -->
   <div class="hdr">
     <div class="logo"><img src="assets/ecocash.png" alt="EcoCash"><div class="logo-sep"></div><img src="assets/econet.png" alt="Econet"></div>
-    <div class="hdr-title">ChakaChaya</div>
     <div class="live"><div class="live-dot"></div><span id="liveCount">Loading…</span></div>
   </div>
 
-  <!-- ROW 2: HEADING -->
+  <!-- ZONE 2: HEADING -->
   <div class="zone-heading">
-    <div class="zone-heading-title">Spin &amp; <span>Win Cash</span></div>
-    <div class="zone-heading-sub">One spin per day · Earn as you transact</div>
+    <div class="zone-heading-title">ChakaChaya <span>· Ziyawa</span></div>
+    <div class="zone-heading-sub">Spin &amp; win cash · One draw per day · EcoCash customers</div>
   </div>
 
-  <!-- ROW 3: WHEEL -->
+  <!-- ZONE 3: WHEEL ENGINE -->
   <div class="wheel-zone" id="wheelZone">
-    <!-- Rings (absolute, behind everything) -->
-    <div class="wheel-ring-outer"></div>
-    <div class="wheel-ring"></div>
 
-    <!-- Wheel disc (flex child, z-index:2) -->
-    <div class="wheel-wrap">
-      <div class="wheel-outer" id="wheelOuter">
-        <div class="wheel-ptr"></div>
-        <div id="wheelRing"></div>
-        <div class="wheel-labels" id="wheelLabels"></div>
-        <div class="wheel-hub"><div class="wheel-hub-inner"><div id="hubTxt">SPIN</div><div id="hubLbl">to win</div></div></div>
+    <!-- Background glow (absolute, purely decorative) -->
+    <div class="wheel-glow"></div>
+
+    <!-- Engine: rings + disc as one centred unit -->
+    <div class="wheel-engine" id="wheelEngine">
+
+      <!-- Outer orbital ring (pure CSS rotation, no translate) -->
+      <div class="ring-outer"></div>
+
+      <!-- Inner orbital ring (pure CSS counter-rotation, no translate) -->
+      <div class="ring-inner"></div>
+
+      <!-- The actual wheel disc -->
+      <div class="wheel-wrap">
+        <div class="wheel-outer" id="wheelOuter">
+          <div class="wheel-ptr"></div>
+          <div id="wheelRing"></div>
+          <div class="wheel-labels" id="wheelLabels"></div>
+          <div class="wheel-hub">
+            <div class="wheel-hub-inner">
+              <div id="hubTxt">SPIN</div>
+              <div id="hubLbl">to win</div>
+            </div>
+          </div>
+        </div>
       </div>
+
+    </div><!-- /wheel-engine -->
+
+    <!-- Spin button — below engine in flex column -->
+    <button class="spin-btn" id="spinBtn" onclick="startSpin(event)">Spin the Wheel</button>
+    <div class="drawn-indicator" id="drawnIndicator">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+      You already drew today · Come back tomorrow
     </div>
 
-    <!-- Spin button (flex child below disc) -->
-    <button class="spin-btn" id="spinBtn" onclick="startSpin(event)">Spin the Wheel</button>
-  </div>
+  </div><!-- /wheel-zone -->
 
-  <!-- ROW 4: INFO CHIPS -->
+  <!-- ZONE 4: INFO CHIPS -->
   <div class="info-zone">
     <div class="info-row">
       <div class="info-chip"><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>Up to USD 2,500</div>
@@ -336,13 +411,13 @@ html,body{width:100%;height:100%;height:100dvh;overflow:hidden;font-family:var(-
     </div>
   </div>
 
-  <!-- ROW 5: CTA -->
+  <!-- ZONE 5: CTA -->
   <div class="pay-zone">
     <button class="pay-btn" id="ctaBtn" onclick="openWheel(event)">
       <div class="pay-left">
         <div class="pay-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></div>
         <div>
-          <div class="pay-title">Check Now</div>
+          <div class="pay-title">Check Now · Tarinda</div>
           <div class="pay-sub">No entry fee · Open to all EcoCash customers</div>
         </div>
       </div>
@@ -360,7 +435,7 @@ html,body{width:100%;height:100%;height:100dvh;overflow:hidden;font-family:var(-
   <div class="sheet">
     <div class="sh-drag"></div>
     <div class="sh-inner">
-      <div class="rs-eyebrow">You won!</div>
+      <div class="rs-eyebrow">Wakunda! · You won!</div>
       <div class="rs-pts" id="rPts">0</div>
       <div class="rs-pts-sub">ChakaChaya Points</div>
       <div class="rs-usd" id="rUsd">= USD 0.00</div>
@@ -383,8 +458,8 @@ html,body{width:100%;height:100%;height:100dvh;overflow:hidden;font-family:var(-
     <div class="sh-drag"></div>
     <div class="sh-inner">
       <div class="ds-icon">🏆</div>
-      <div class="ds-title">You already drew today</div>
-      <div class="ds-sub">Your points are waiting. Redeem now and receive cash directly to your EcoCash wallet.</div>
+      <div class="ds-title">Waziyawa nhasi! · You already drew today</div>
+      <div class="ds-sub">Your points are waiting. Redeem now and receive cash to your EcoCash wallet.</div>
       <div class="ds-pts" id="dbPts">0 pts</div>
       <div class="ds-usd" id="dbUsd">= USD 0.00</div>
       <div style="height:12px"></div>
@@ -441,6 +516,25 @@ function getStoredDraw(){try{const d=JSON.parse(localStorage.getItem('cc_draw')|
 function clearDraw(){localStorage.removeItem('cc_draw')}
 
 let angle=0,spinning=false,spun=false,wonPts=0;
+
+/* ── CHECK DRAWN ON LOAD ── */
+(function checkDrawnOnLoad(){
+  const prev=getStoredDraw();
+  if(!prev)return;
+  const sb=document.getElementById('spinBtn');
+  if(sb){sb.innerHTML='<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg> Already Spun Today';sb.classList.add('drawn');sb.disabled=true;}
+  const di=document.getElementById('drawnIndicator');
+  if(di)di.classList.add('show');
+  const cta=document.getElementById('ctaBtn');
+  if(cta){
+    cta.classList.add('drawn');
+    const t=cta.querySelector('.pay-title');if(t)t.textContent='View Winnings · Wona Mubayiro';
+    const s=cta.querySelector('.pay-sub');if(s)s.textContent='Tap to redeem · '+prev.pts.toLocaleString()+' pts waiting';
+    const p=cta.querySelector('.pay-prize');if(p)p.textContent=fmtU(prev.pts);
+    const l=cta.querySelector('.pay-lbl');if(l)l.textContent='Won today';
+  }
+  spun=true;wonPts=prev.pts||0;
+})();
 
 function hideFab(){var f=document.getElementById('fab');if(f){f.style.opacity='0';f.style.pointerEvents='none'}}
 function showFab(){var f=document.getElementById('fab');if(f){f.style.opacity='1';f.style.pointerEvents='auto'}}
@@ -509,6 +603,21 @@ function resetSpin(){
   clearDraw();spun=false;wonPts=0;
   document.getElementById('resultWrap').classList.remove('show');
   showFab();
+  // Reset spin button
+  const sb=document.getElementById('spinBtn');
+  if(sb){sb.textContent='Spin the Wheel';sb.classList.remove('drawn');sb.disabled=false;}
+  // Hide drawn indicator
+  const di=document.getElementById('drawnIndicator');
+  if(di)di.classList.remove('show');
+  // Reset CTA button
+  const cta=document.getElementById('ctaBtn');
+  if(cta){
+    cta.classList.remove('drawn');
+    const t=cta.querySelector('.pay-title');if(t)t.textContent='Check Now · Tarinda';
+    const s=cta.querySelector('.pay-sub');if(s)s.textContent='No entry fee · Open to all EcoCash customers';
+    const p=cta.querySelector('.pay-prize');if(p)p.textContent='USD 2,500';
+    const l=cta.querySelector('.pay-lbl');if(l)l.textContent='Win up to';
+  }
   document.getElementById('hubTxt').textContent='SPIN';
   document.getElementById('hubLbl').textContent='to win';
   const btn=document.getElementById('spinBtn');
