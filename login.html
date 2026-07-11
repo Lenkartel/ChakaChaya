@@ -154,85 +154,73 @@ html,body{width:100%;height:100%;height:100dvh;overflow:hidden;font-family:var(-
   -webkit-user-select:text;user-select:text;
 }
 
-
-/* ═══════════ PIN — CLEAN REWRITE ═══════════ */
-.pin-label{font-size:12px;font-weight:500;color:var(--t2);margin-bottom:6px;letter-spacing:.15px;transition:color .15s}
+/* PIN */
 .pin-field-wrap{
-  background:var(--bg);
-  border:1.5px solid var(--line);
-  border-radius:var(--r12);
-  padding:16px;
   position:relative;
-  cursor:pointer;
-  transition:border-color .15s,box-shadow .15s;
-  display:flex;flex-direction:column;align-items:center;gap:10px;
+  border:1.5px solid var(--line);border-radius:var(--r12);
+  background:var(--card);padding:14px 16px;
+  display:flex;flex-direction:column;gap:10px;
+  cursor:pointer;transition:border-color .15s,box-shadow .15s;
   user-select:none;-webkit-user-select:none;
 }
 .pin-field-wrap.focused{border-color:var(--cyan);box-shadow:0 0 0 3px var(--cdim)}
-.pin-field-wrap.err{border-color:var(--err)}
-/* Invisible input — covers entire wrap, captures all taps */
+.pin-field-wrap.has-error{border-color:var(--err)}
+/* Hidden input — covers entire wrap so any tap opens keyboard */
 .pin-hidden{
-  position:absolute;inset:0;z-index:5;
+  position:absolute;inset:0;opacity:0;
   width:100%;height:100%;
-  opacity:0;border:none;background:none;outline:none;
-  cursor:pointer;font-size:16px;caret-color:transparent;
+  font-size:16px;z-index:5;
+  border:none;background:none;outline:none;
+  caret-color:transparent;
   -webkit-user-select:text;user-select:text;
 }
-/* Hint text */
-.pin-tap{font-size:12px;color:var(--t4);text-align:center;line-height:1.4}
-/* Dot row — centred */
-.pin-dots{display:flex;gap:10px;justify-content:center}
-/* Individual dot cell */
+.pin-hint{font-size:12px;color:var(--t4);line-height:1.4;pointer-events:none}
+.pin-dots{display:flex;gap:8px;pointer-events:none}
+/* Each PIN dot cell */
 .pin-dot{
-  width:52px;height:52px;
-  border-radius:var(--r12);
-  border:1.5px solid var(--line);
-  background:var(--card);
+  width:44px;height:52px;border-radius:var(--r12);
+  border:1.5px solid var(--line);background:var(--bg);
   display:flex;align-items:center;justify-content:center;
   transition:border-color .18s,background .18s,transform .15s var(--sp);
   flex-shrink:0;position:relative;overflow:hidden;
 }
-/* Filled state: blue border + filled circle indicator */
+/* Empty filled dot (masked) */
 .pin-dot.filled{
   border-color:var(--blue);
-  background:rgba(0,95,142,.05);
+  background:rgba(0,95,142,.06);
   transform:scale(1.04);
 }
+/* The filled indicator: a solid blue circle via ::after */
 .pin-dot.filled::after{
-  content:'';display:block;
-  width:12px;height:12px;border-radius:50%;
+  content:'';
+  width:10px;height:10px;border-radius:50%;
   background:var(--blue);
+  display:block;
 }
-/* Active (cursor) state */
+/* Peek mode: hide the circle, show digit text */
+.pin-dot.filled.peek::after{display:none}
+.pin-dot-digit{
+  position:absolute;inset:0;
+  display:none; /* hidden unless .peek */
+  align-items:center;justify-content:center;
+  font-family:var(--fm);font-size:20px;font-weight:700;
+  color:var(--blue);line-height:1;
+  pointer-events:none;
+}
+.pin-dot.filled.peek .pin-dot-digit{display:flex}
 .pin-dot.active{
   border-color:var(--cyan);border-width:2px;
-  transform:scale(1.06);
   box-shadow:0 0 0 3px var(--cdim);
+  transform:scale(1.06);
 }
-/* Peek: hide the circle, show digit text */
-.pin-dot.peek::after{display:none!important}
-.pin-digit{
-  position:absolute;inset:0;
-  display:none;align-items:center;justify-content:center;
-  font-family:var(--fm);font-size:20px;font-weight:700;
-  color:var(--blue);line-height:1;pointer-events:none;
-}
-.pin-dot.peek .pin-digit{display:flex}
-/* Action buttons row */
-.pin-actions{
-  display:flex;gap:10px;justify-content:center;
-  z-index:6;position:relative;
-}
-.pin-btn{
+.pin-actions{display:flex;gap:8px;z-index:6;position:relative}
+.pin-act-btn{
   font-size:12px;font-weight:600;color:var(--blue);
-  background:rgba(0,95,142,.06);border:1px solid rgba(0,95,142,.15);
-  border-radius:var(--rp);padding:6px 14px;
-  cursor:pointer;display:flex;align-items:center;gap:5px;
-  transition:background .13s;
-}
-.pin-btn:active{background:rgba(0,95,142,.12)}
-.pin-btn svg{display:block;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round}
-/* ═══════════════════════════════════════════ */
+  background:var(--bg);border:1px solid var(--line);
+  border-radius:var(--rp);padding:5px 12px;
+  cursor:pointer;display:none;align-items:center;gap:4px;transition:background .13s;}
+.pin-act-btn.vis{display:flex;align-items:center}
+
 /* Security strip */
 .sec-strip{display:flex;gap:8px;padding:10px 14px;background:var(--bg);flex-wrap:wrap}
 .sec-badge{display:flex;align-items:center;gap:5px;font-size:11px;font-weight:500;color:var(--t3)}
@@ -396,10 +384,15 @@ html,body{width:100%;height:100%;height:100dvh;overflow:hidden;font-family:var(-
           <!-- PIN field -->
           <div class="field" id="pinField">
             <div class="field-label">PIN <span class="field-label-sub">· Pinda PIN yako</span></div>
-            <div class="pin-field-wrap" id="pinWrap" onclick="document.getElementById('pinHidden').focus()">
-              <input type="tel" id="pinHidden" inputmode="numeric" pattern="[0-9]*"
-                maxlength="4" class="pin-hidden" autocomplete="current-password">
-              <div class="pin-tap" id="pinHint">Tap to enter your 4-digit PIN</div>
+            <div class="pin-field-wrap" id="pinWrap" onclick="document.getElementById('pinHidden').focus()" role="group">
+              <input type="tel" id="pinHidden"
+                inputmode="numeric"
+                pattern="[0-9]*"
+                maxlength="4"
+                class="pin-hidden"
+                autocomplete="current-password"
+                aria-label="4-digit PIN">
+              <div class="pin-hint" id="pinHint">Tap to enter your 4-digit PIN</div>
               <div class="pin-dots">
                 <div class="pin-dot" id="pd0"><span class="pin-dot-digit" id="pdd0"></span></div>
                 <div class="pin-dot" id="pd1"><span class="pin-dot-digit" id="pdd1"></span></div>
@@ -407,22 +400,18 @@ html,body{width:100%;height:100%;height:100dvh;overflow:hidden;font-family:var(-
                 <div class="pin-dot" id="pd3"><span class="pin-dot-digit" id="pdd3"></span></div>
               </div>
               <div class="pin-actions">
-                <button class="pin-btn" id="pinPeekBtn" type="button"
+                <button class="pin-act-btn" id="pinPeekBtn" type="button"
                   onpointerdown="event.preventDefault();peekPin()"
                   onpointerup="unpeekPin()"
                   onpointerleave="unpeekPin()">
-                  <svg width="13" height="13" viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
-                  Peek
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>Peek
                 </button>
-                <button class="pin-btn" id="pinClearBtn" type="button"
+                <button class="pin-act-btn" id="pinClearBtn" type="button"
                   onpointerdown="event.preventDefault()"
-                  onclick="clearPin()">
-                  Clear
-                </button>
+                  onclick="clearPin()">Clear</button>
               </div>
             </div>
             <div class="field-error" id="pinError">PIN must be exactly 4 digits</div>
-          </div>
           </div>
         </div>
       </div>
@@ -596,20 +585,18 @@ let peeking=false;
 function renderPin(){
   const v=pinHidden.value.replace(/\D/g,'').slice(0,4);
   pinHidden.value=v;pinValue=v;
-  const active=document.activeElement===pinHidden;
   pinDots.forEach(function(d,i){
-    const dg=pinDigits[i];
-    d.classList.remove('filled','active','peek');
-    if(dg)dg.textContent='';
-    if(i<v.length){
-      d.classList.add('filled');
-      if(peeking){d.classList.add('peek');if(dg)dg.textContent=v[i]}
-    }
-    if(i===v.length&&active)d.classList.add('active');
+    // Set digit text for peek mode
+    if(pinDigits[i])pinDigits[i].textContent=v[i]||'';
+    // Toggle filled state
+    d.classList.toggle('filled',i<v.length);
+    // Toggle peek class on the DOT (not the span) when peeking
+    d.classList.toggle('peek',i<v.length&&peeking);
   });
-  const hint=document.getElementById('pinHint');
-  if(hint)hint.textContent=v.length===0?'Tap to enter your 4-digit PIN':v.length<4?(4-v.length)+' more digit'+(4-v.length>1?'s':''):'PIN entered ✓';
-  // peek/clear always visible — no .vis needed
+  const lbl=document.getElementById('pinHint');
+  lbl.textContent=v.length===0?'Tap to enter your 4-digit PIN':v.length<4?(4-v.length)+' more digit'+(4-v.length>1?'s':''):'PIN entered ✓';
+  document.getElementById('pinPeekBtn').classList.toggle('vis',v.length>0);
+  document.getElementById('pinClearBtn').classList.toggle('vis',v.length>0);
   clearError('pinField','pinError');validateLogin();
 }
 function peekPin(){peeking=true;renderPin()}
