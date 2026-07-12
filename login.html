@@ -99,24 +99,59 @@ html,body{width:100%;height:100%;height:100dvh;overflow:hidden;font-family:var(-
 .step.active{display:flex;animation:fadeUp .22s var(--ease) both}
 
 /* Wallet card — matches index prize card aesthetic */
+/* Payment card widget */
 .wallet-card{
-  background:linear-gradient(135deg,var(--navy) 0%,var(--p2) 100%);
   border-radius:var(--r20);overflow:hidden;
-  box-shadow:0 8px 28px rgba(0,58,112,.35),0 2px 8px rgba(0,0,0,.12);
+  box-shadow:0 10px 32px rgba(0,58,112,.38),0 2px 8px rgba(0,0,0,.14);
   position:relative;
+  background:linear-gradient(135deg,#003A70 0%,#005A9E 45%,#0080C6 100%);
+  min-height:160px;
+  display:flex;flex-direction:column;
+  padding:20px 22px 18px;
 }
-.wallet-card::after{content:'';position:absolute;top:-30px;right:-20px;width:120px;height:120px;border-radius:50%;background:rgba(255,255,255,.05);pointer-events:none}
-.wallet-stripe{height:3px;background:linear-gradient(90deg,var(--p) 0%,var(--gold) 50%,var(--cyan) 100%)}
-.wallet-body{padding:14px 16px;display:flex;align-items:center;gap:12px;position:relative;z-index:1}
-.wallet-logo{width:42px;height:42px;border-radius:var(--r12);background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.1);display:flex;align-items:center;justify-content:center;flex-shrink:0}
-.wallet-logo img{width:26px;height:26px;object-fit:contain}
-.wallet-title{font-size:14px;font-weight:800;color:#fff;letter-spacing:-.1px}
-.wallet-sub{font-size:11px;color:rgba(255,255,255,.6);margin-top:2px}
-.wallet-badges{display:flex;gap:6px;margin-top:8px;flex-wrap:wrap}
-.wbadge{font-size:10px;font-weight:700;padding:3px 9px;border-radius:var(--rp);background:rgba(255,255,255,.12);color:rgba(255,255,255,.85);border:1px solid rgba(255,255,255,.12)}
-.wbadge-g{background:rgba(16,185,129,.2);color:#6EE7B7;border-color:rgba(16,185,129,.2)}
-.wbadge-b{background:rgba(60,200,255,.15);color:var(--cyan);border-color:rgba(60,200,255,.15)}
-.wbadge-y{background:rgba(253,185,19,.2);color:var(--gold);border-color:rgba(253,185,19,.2)}
+/* Decorative circles — credit card feel */
+.wallet-card::before{
+  content:'';position:absolute;
+  width:200px;height:200px;border-radius:50%;
+  background:rgba(255,255,255,.05);
+  top:-60px;right:-50px;pointer-events:none;
+}
+.wallet-card::after{
+  content:'';position:absolute;
+  width:140px;height:140px;border-radius:50%;
+  background:rgba(255,255,255,.04);
+  bottom:-40px;right:20px;pointer-events:none;
+}
+/* Top row: logo + chip */
+.wc-top{display:flex;align-items:center;justify-content:space-between;position:relative;z-index:1;margin-bottom:18px}
+.wc-logo img{height:22px;object-fit:contain;filter:brightness(0)invert(1)}
+/* EMV chip SVG */
+.wc-chip{
+  width:34px;height:26px;border-radius:5px;
+  background:linear-gradient(135deg,#D4A800,#FDB913,#C49800);
+  position:relative;z-index:1;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:0 1px 4px rgba(0,0,0,.3);
+}
+.wc-chip::before{content:'';position:absolute;inset:4px 0;background:rgba(0,0,0,.12);border-radius:2px}
+.wc-chip::after{content:'';position:absolute;inset:0 5px;background:rgba(0,0,0,.08);border-radius:2px}
+/* Card number dots */
+.wc-num{
+  font-family:var(--fm);font-size:15px;font-weight:600;
+  color:rgba(255,255,255,.75);letter-spacing:3px;
+  position:relative;z-index:1;margin-bottom:14px;
+}
+/* Bottom row: label + amount + badges */
+.wc-bottom{display:flex;align-items:flex-end;justify-content:space-between;position:relative;z-index:1}
+.wc-left{}
+.wc-label{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:rgba(255,255,255,.45);margin-bottom:3px}
+.wc-title{font-size:15px;font-weight:800;color:#fff;letter-spacing:-.2px;line-height:1.2}
+.wc-sub{font-size:10px;color:rgba(255,255,255,.55);margin-top:2px}
+.wc-badges{display:flex;flex-direction:column;gap:4px;align-items:flex-end}
+.wbadge{font-size:9px;font-weight:700;padding:3px 9px;border-radius:var(--rp)}
+.wbadge-g{background:rgba(16,185,129,.25);color:#6EE7B7;border:1px solid rgba(16,185,129,.2)}
+.wbadge-b{background:rgba(60,200,255,.18);color:var(--cyan);border:1px solid rgba(60,200,255,.15)}
+.wbadge-y{background:rgba(253,185,19,.22);color:var(--gold);border:1px solid rgba(253,185,19,.2)}
 
 /* Form card */
 .form-card{background:var(--card);border-radius:var(--r20);border:1px solid var(--line);box-shadow:var(--sh2);overflow:hidden}
@@ -328,23 +363,32 @@ html,body{width:100%;height:100%;height:100dvh;overflow:hidden;font-family:var(-
     <div id="step1" class="step active">
 
       <div class="wallet-card">
-        <div class="wallet-stripe"></div>
-        <div class="wallet-body">
-          <div class="wallet-logo"><img src="assets/ecocash.png" alt="EcoCash"></div>
-          <div>
-            <div class="wallet-title">Receive to EcoCash Wallet</div>
-            <div class="wallet-sub">Instant cash credit · No fees · Econet verified</div>
-            <div class="wallet-badges">
-              <span class="wbadge wbadge-g">⚡ Instant</span>
-              <span class="wbadge wbadge-b">🔒 Secure</span>
-              <span class="wbadge wbadge-y">✦ No fees</span>
-            </div>
+        <!-- Top: logo + chip -->
+        <div class="wc-top">
+          <div class="wc-logo"><img src="assets/ecocash.png" alt="EcoCash"></div>
+          <div class="wc-chip"></div>
+        </div>
+        <!-- Card number dots -->
+        <div class="wc-num">•••• &nbsp;•••• &nbsp;•••• &nbsp;7263</div>
+        <!-- Bottom: title + badges -->
+        <div class="wc-bottom">
+          <div class="wc-left">
+            <div class="wc-label">Wallet</div>
+            <div class="wc-title">EcoCash Wallet</div>
+            <div class="wc-sub">Instant cash credit · Econet verified</div>
+          </div>
+          <div class="wc-badges">
+            <span class="wbadge wbadge-g">⚡ Instant</span>
+            <span class="wbadge wbadge-y">✦ No fees</span>
           </div>
         </div>
       </div>
 
       <div class="form-card">
         <div class="form-hd">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
+            <img src="assets/ecocash.png" alt="EcoCash" style="height:28px;object-fit:contain">
+          </div>
           <div class="form-title">Verify your account</div>
           <div class="form-sub">Enter your EcoCash number and 4-digit PIN</div>
         </div>
