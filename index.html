@@ -3,379 +3,565 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover"/>
-<meta name="theme-color" content="#005F8E"/>
-<title>ChakaChaya · EcoCash Rewards</title>
+<meta name="theme-color" content="#003A70"/>
+<title>ChakaChaya neEcoCash · Rewards</title>
 <link rel="icon" href="assets/ecocash.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700&family=DM+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700;9..40,800&family=DM+Mono:wght@500;600;700&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;-webkit-user-select:none;user-select:none}
 :root{
-  --blue:#005F8E;--blue2:#004470;--blue3:#003558;
-  --cyan:#00C2FF;--cdim:rgba(0,194,255,.14);
-  --bg:#EFF4FA;--card:#FFFFFF;--line:rgba(0,95,142,.1);
-  --t1:#0F172A;--t2:#334155;--t3:#64748B;--t4:#94A3B8;
-  --ok:#10B981;--warn:#F59E0B;--err:#EF4444;
-  --f:'DM Sans',system-ui,sans-serif;
-  --fm:'DM Mono',monospace;
-  --rp:999px;--r12:12px;--r16:16px;--r20:20px;--r24:24px;
-  --sp:cubic-bezier(.34,1.56,.64,1);
+  --p:    #009FE3;
+  --p2:   #0080C6;
+  --navy: #003A70;
+  --navy2:#002850;
+  --cyan: #3CC8FF;
+  --gold: #FDB913;
+  --gold2:#F0A800;
+  --white:#FFFFFF;
+  --sky:  #F5FBFF;
+  --sky2: #E8F5FD;
+  --line: rgba(0,159,227,.12);
+  --t1:   #0A1929;
+  --t2:   #1A3A52;
+  --t3:   #5A7A94;
+  --t4:   #9BB5C8;
+  --ok:   #10B981;
+  --err:  #EF4444;
+  --f:   'DM Sans',system-ui,sans-serif;
+  --fm:  'DM Mono',monospace;
+  --rp:  999px; --r8:8px; --r12:12px; --r16:16px; --r20:20px; --r24:24px; --r32:32px;
+  --sp:  cubic-bezier(.34,1.56,.64,1);
   --ease:cubic-bezier(.2,0,0,1);
-  --sh:0 1px 3px rgba(0,0,0,.07),0 4px 16px rgba(0,0,0,.05);
+  --glass:rgba(255,255,255,.12);
+  --glass-b:rgba(255,255,255,.06);
 }
-@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}}
-html,body{width:100%;height:100%;height:100dvh;overflow:hidden;font-family:var(--f);background:var(--blue);-webkit-font-smoothing:antialiased}
+@media(prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important}}
+html,body{width:100%;height:100%;height:100dvh;overflow:hidden;font-family:var(--f);background:var(--navy);-webkit-font-smoothing:antialiased;color:var(--t1)}
 
 /* ── KEYFRAMES ── */
-@keyframes pgIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
-@keyframes pgOut{to{opacity:0;transform:translateY(-6px)}}
-@keyframes spin{to{transform:rotate(360deg)}}
-@keyframes cFill{from{width:0}to{width:100%}}
-@keyframes livePulse{0%,100%{opacity:.35}50%{opacity:1}}
-@keyframes ripAnim{to{transform:scale(4);opacity:0}}
-@keyframes cf-fall{0%{transform:translateY(0) rotate(0deg);opacity:1}100%{transform:translateY(105vh) rotate(540deg);opacity:0}}
-@keyframes shUp{from{transform:translateY(100%);opacity:.4}to{transform:none;opacity:1}}
-@keyframes glowPulse{0%,100%{opacity:.6;transform:translate(-50%,-50%) scale(1)}50%{opacity:1;transform:translate(-50%,-50%) scale(1.06)}}
-@keyframes tdot{0%,80%,100%{transform:scale(.6);opacity:.3}40%{transform:scale(1);opacity:1}}
-/* Ring rotation — pure rotation only, no translate */
-@keyframes ringRotCW{to{transform:rotate(360deg)}}
-@keyframes ringRotCCW{to{transform:rotate(-360deg)}}
+@keyframes pgIn     {from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+@keyframes fadeUp   {from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+@keyframes spin     {to{transform:rotate(360deg)}}
+@keyframes cFill    {from{width:0}to{width:100%}}
+@keyframes pulse    {0%,100%{opacity:.4}50%{opacity:1}}
+@keyframes ripAnim  {to{transform:scale(4.5);opacity:0}}
+@keyframes cffall   {0%{transform:translateY(0) rotate(0deg);opacity:1}100%{transform:translateY(105vh) rotate(540deg);opacity:0}}
+@keyframes shUp     {from{transform:translateY(100%)}to{transform:none}}
+@keyframes ringCW   {to{transform:rotate(360deg)}}
+@keyframes ringCCW  {to{transform:rotate(-360deg)}}
+@keyframes glow     {0%,100%{opacity:.5;transform:translate(-50%,-50%) scale(1)}50%{opacity:1;transform:translate(-50%,-50%) scale(1.1)}}
+@keyframes float    {0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+@keyframes shine    {0%{left:-100%}100%{left:200%}}
+@keyframes tdot     {0%,80%,100%{transform:scale(.55);opacity:.3}40%{transform:scale(1);opacity:1}}
+@keyframes heroIn   {from{opacity:0;transform:scale(.96) translateY(10px)}to{opacity:1;transform:none}}
+@keyframes goldPop  {0%{transform:scale(1)}40%{transform:scale(1.08)}100%{transform:scale(1)}}
+@keyframes circFloat{0%,100%{transform:translateY(0) translateX(0)}33%{transform:translateY(-12px) translateX(6px)}66%{transform:translateY(8px) translateX(-4px)}}
 
 /* ── CURTAIN ── */
-.curtain{position:fixed;inset:0;z-index:9999;pointer-events:none;background:var(--blue);opacity:0;transition:opacity .22s;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px}
+.curtain{position:fixed;inset:0;z-index:9999;pointer-events:none;background:linear-gradient(160deg,var(--navy) 0%,var(--p2) 100%);opacity:0;transition:opacity .25s;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px}
 .curtain.show{opacity:1;pointer-events:auto}
-.c-brand{display:flex;align-items:center;gap:9px;padding:7px 18px;border-radius:var(--rp);background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15)}
-.c-brand img{height:15px;object-fit:contain;filter:brightness(0)invert(1)}
-.c-sep{width:1px;height:11px;background:rgba(255,255,255,.25)}
-.c-ring svg{animation:spin 1s linear infinite}
-#cLbl{font-size:14px;font-weight:500;color:#fff;text-align:center;transition:opacity .18s}
-#cSub{font-size:12px;color:rgba(255,255,255,.55);text-align:center;transition:opacity .18s}
-.c-bar{width:140px;height:2px;background:rgba(255,255,255,.2);border-radius:var(--rp);overflow:hidden}
-.c-fill{height:100%;background:var(--cyan);animation:cFill 1.6s cubic-bezier(.4,0,.2,1) both}
+.c-brand{display:flex;align-items:center;gap:10px;padding:8px 20px;border-radius:var(--rp);background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.18)}
+.c-brand img{height:16px;object-fit:contain;filter:brightness(0)invert(1)}
+.c-vsep{width:1px;height:14px;background:rgba(255,255,255,.22)}
+.c-spin svg{animation:spin 1s linear infinite}
+#cLbl{font-size:15px;font-weight:700;color:#fff;letter-spacing:-.2px}
+#cSub{font-size:12px;color:rgba(255,255,255,.55);margin-top:2px;text-align:center}
+.c-bar{width:160px;height:2.5px;background:rgba(255,255,255,.15);border-radius:var(--rp);overflow:hidden}
+.c-fill{height:100%;background:linear-gradient(90deg,var(--cyan),var(--gold));animation:cFill 1.6s cubic-bezier(.4,0,.2,1) both}
 .c-dots{display:flex;gap:8px}
-.c-dot{width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.25);transition:background .2s}
-.c-dot.on{background:var(--cyan)}.c-dot.done{background:rgba(255,255,255,.6)}
+.cdot{width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.2);transition:background .22s}
+.cdot.on{background:var(--gold)}.cdot.done{background:rgba(255,255,255,.5)}
 
-/* ── APP ── */
-.app{display:flex;flex-direction:column;width:100%;height:100%;height:100dvh;overflow:hidden;animation:pgIn .3s var(--ease) both}
-.app.exit{animation:pgOut .22s var(--ease) forwards}
+/* ── APP SHELL ── */
+.app{display:flex;flex-direction:column;width:100%;height:100dvh;overflow:hidden;animation:pgIn .35s var(--ease) both}
+.app.exit{opacity:0;transform:translateY(-8px);transition:opacity .22s,transform .22s}
 
-/* ── ZONE 1: HEADER ── */
-.hdr{flex-shrink:0;background:var(--blue);padding:max(12px,env(safe-area-inset-top)) 20px 10px;display:flex;align-items:center;justify-content:space-between}
-.logo{display:flex;align-items:center;gap:9px}
-.logo img{height:16px;object-fit:contain;filter:brightness(0)invert(1)}
-.logo-sep{width:1px;height:12px;background:rgba(255,255,255,.25)}
-.live{display:flex;align-items:center;gap:5px;font-size:11px;font-weight:500;color:rgba(255,255,255,.6)}
-.live-dot{width:5px;height:5px;border-radius:50%;background:var(--ok);flex-shrink:0;animation:livePulse 2.4s ease-in-out infinite}
+/* ══════════════════════════════════════
+   ZONE 1 — HERO (blue gradient, flex-shrink:0)
+   ══════════════════════════════════════ */
+.hero{
+  flex-shrink:0;
+  position:relative;
+  overflow:hidden;
+  background:linear-gradient(160deg,var(--navy) 0%,var(--navy2) 40%,var(--p2) 100%);
+  padding:max(14px,env(safe-area-inset-top)) 18px 0;
+}
+/* Floating abstract circles */
+.hero-circle{position:absolute;border-radius:50%;pointer-events:none}
+.hc1{width:180px;height:180px;background:radial-gradient(circle,rgba(60,200,255,.18) 0%,transparent 70%);top:-40px;right:-30px;animation:circFloat 7s ease-in-out infinite}
+.hc2{width:120px;height:120px;background:radial-gradient(circle,rgba(253,185,19,.12) 0%,transparent 70%);bottom:10px;left:-20px;animation:circFloat 9s ease-in-out infinite reverse}
+.hc3{width:80px;height:80px;background:radial-gradient(circle,rgba(255,255,255,.08) 0%,transparent 70%);top:30px;left:40%;animation:circFloat 11s ease-in-out infinite}
 
-/* ── ZONE 2: HEADING (still on blue) ── */
-.zone-heading{flex-shrink:0;background:var(--blue);padding:4px 20px 14px;text-align:center}
-.zone-heading-title{font-size:clamp(20px,5.5vw,26px);font-weight:700;color:#fff;letter-spacing:-.4px;line-height:1.2}
-.zone-heading-title span{color:var(--cyan)}
-.zone-heading-sub{font-size:clamp(10px,2.5vw,12px);color:rgba(255,255,255,.5);margin-top:3px}
+/* Top nav row */
+.hero-nav{display:flex;align-items:center;justify-content:space-between;position:relative;z-index:2}
+.h-logos{display:flex;align-items:center;gap:8px}
+.h-logos img{height:18px;object-fit:contain;filter:brightness(0)invert(1)}
+.h-logos-sep{width:1px;height:14px;background:rgba(255,255,255,.22)}
+.h-badge{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--gold);background:rgba(253,185,19,.15);border:1px solid rgba(253,185,19,.3);border-radius:var(--rp);padding:4px 10px}
+.h-pts-pill{display:flex;align-items:center;gap:5px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.14);border-radius:var(--rp);padding:5px 12px}
+.h-pts-lbl{font-size:10px;color:rgba(255,255,255,.5);font-weight:500}
+.h-pts-val{font-family:var(--fm);font-size:13px;font-weight:700;color:#fff}
+.live-dot{width:5px;height:5px;border-radius:50%;background:var(--ok);animation:pulse 2s ease-in-out infinite}
 
-/* ── ZONE 3: WHEEL ── */
+/* Hero text */
+.hero-body{position:relative;z-index:2;text-align:center;padding:18px 4px 0;animation:heroIn .5s .1s var(--ease) both}
+.hero-eyebrow{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:rgba(255,255,255,.5);margin-bottom:6px}
+.hero-title{font-size:clamp(24px,7vw,32px);font-weight:800;color:#fff;line-height:1.1;letter-spacing:-.5px;text-shadow:0 2px 20px rgba(0,0,0,.2)}
+.hero-title .h-acc{
+  background:linear-gradient(90deg,var(--cyan),var(--gold),var(--cyan));
+  background-size:200% auto;
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  animation:shine 3s linear infinite;
+}
+.hero-sub{font-size:13px;color:rgba(255,255,255,.55);margin-top:6px;line-height:1.55}
+/* Prize pill */
+.prize-pill{
+  display:inline-flex;align-items:center;gap:8px;
+  background:linear-gradient(135deg,rgba(253,185,19,.2),rgba(253,185,19,.08));
+  border:1.5px solid rgba(253,185,19,.4);
+  border-radius:var(--rp);padding:8px 18px;margin-top:12px;
+  font-size:13px;font-weight:700;color:var(--gold);letter-spacing:.1px;
+  box-shadow:0 4px 20px rgba(253,185,19,.15);
+  animation:goldPop 3s ease-in-out infinite;
+}
+.prize-pill svg{display:block;fill:var(--gold);width:14px;height:14px}
+
+/* Stats cards row */
+.hero-stats{display:flex;gap:8px;padding:14px 0 0;position:relative;z-index:2}
+.stat-card{
+  flex:1;
+  background:rgba(255,255,255,.08);
+  border:1px solid rgba(255,255,255,.1);
+  border-radius:var(--r16);
+  padding:10px 10px 8px;
+  text-align:center;
+  backdrop-filter:blur(10px);
+  -webkit-backdrop-filter:blur(10px);
+}
+.stat-val{font-family:var(--fm);font-size:18px;font-weight:700;color:#fff;line-height:1;letter-spacing:-.02em}
+.stat-lbl{font-size:9px;font-weight:600;text-transform:uppercase;letter-spacing:.4px;color:rgba(255,255,255,.45);margin-top:3px}
+
+/* Hero → wheel zone connector curve */
+.hero-curve{
+  position:relative;z-index:1;
+  height:28px;margin-top:-1px;flex-shrink:0;
+  background:var(--navy); /* same as hero bottom */
+}
+.hero-curve::after{
+  content:'';
+  position:absolute;bottom:0;left:0;right:0;
+  height:28px;
+  background:var(--sky);
+  border-radius:28px 28px 0 0;
+}
+
+/* ══════════════════════════════════════
+   ZONE 2 — WHEEL (flex:1)
+   ══════════════════════════════════════ */
 .wheel-zone{
-  flex:1;min-height:200px;
-  background:var(--bg);
-  border-radius:var(--r24) var(--r24) 0 0;
+  flex:1;min-height:0;
+  background:var(--sky);
   display:flex;flex-direction:column;
   align-items:center;justify-content:center;
-  position:relative;
-  /* overflow:hidden clips pointer; overflow:visible lets it show */
-  overflow:hidden;
-  gap:14px;
-  padding:20px 16px 16px;
+  position:relative;overflow:hidden;
+  gap:10px;
+  padding:8px 16px 8px;
 }
-
-/* Soft radial glow behind engine — absolute on zone */
-.wheel-glow{
-  position:absolute;
-  top:50%;left:50%;
-  transform:translate(-50%,-50%);
-  width:clamp(260px,70vw,360px);height:clamp(260px,70vw,360px);
-  border-radius:50%;
-  background:radial-gradient(ellipse at center,rgba(0,95,142,.12) 0%,transparent 66%);
+/* Subtle mesh gradient background */
+.wheel-zone::before{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse at 30% 40%,rgba(0,159,227,.06) 0%,transparent 60%),
+             radial-gradient(ellipse at 70% 70%,rgba(60,200,255,.04) 0%,transparent 50%);
   pointer-events:none;z-index:0;
-  animation:glowPulse 3s ease-in-out infinite;
+}
+/* Ambient glow behind engine */
+.w-glow{
+  position:absolute;top:50%;left:50%;
+  transform:translate(-50%,-50%);
+  width:clamp(240px,68vw,320px);height:clamp(240px,68vw,320px);
+  border-radius:50%;
+  background:radial-gradient(ellipse,rgba(0,159,227,.12) 0%,transparent 68%);
+  pointer-events:none;z-index:0;
+  animation:glow 4s ease-in-out infinite;
 }
 
-/*
-  WHEEL ENGINE
-  ============
-  One wrapper that holds everything together.
-  The engine is a flex child of wheel-zone — centred.
-  Rings are absolute INSIDE the engine.
-  Disc (wheel-wrap) is also inside, centred by flex.
-
-  KEY RULE: rings must ONLY use transform:rotate() in their animation.
-  Any translate in the base style will be overwritten by the keyframe.
-  So we centre rings using: position:absolute; top:0; left:0; right:0; bottom:0; margin:auto
-  This works because the element is block-level and margin:auto distributes space.
-*/
+/* ENGINE wrapper */
 .wheel-engine{
   position:relative;z-index:1;flex-shrink:0;
-  width:clamp(200px,58vw,270px);
-  height:clamp(200px,58vw,270px);
+  width:clamp(212px,62vw,276px);
+  height:clamp(212px,62vw,276px);
   display:flex;align-items:center;justify-content:center;
-  /* Top padding so pointer triangle has room */
-  margin-top:16px;
+  margin-top:10px;
+  filter:drop-shadow(0 12px 32px rgba(0,159,227,.25));
+  animation:float 4s ease-in-out infinite;
 }
-
-/* Outer ring — pure rotation, centred via margin:auto */
-.ring-outer{
-  position:absolute;
-  top:0;left:0;right:0;bottom:0;margin:auto;
-  width:100%;height:100%;
-  border-radius:50%;
-  border:1px solid rgba(0,194,255,.15);
+/* Outer ring — gold glowing */
+.ring-a{
+  position:absolute;top:0;left:0;right:0;bottom:0;margin:auto;
+  width:100%;height:100%;border-radius:50%;
+  border:2px solid rgba(253,185,19,.35);
+  box-shadow:0 0 0 4px rgba(253,185,19,.06),inset 0 0 0 4px rgba(253,185,19,.04);
+  animation:ringCW 28s linear infinite;
   pointer-events:none;z-index:1;
-  animation:ringRotCW 28s linear infinite;
 }
-/* Glowing dot ON the outer ring */
-.ring-outer::after{
-  content:'';
-  position:absolute;
-  top:-5px;left:50%;
-  width:10px;height:10px;border-radius:50%;
-  background:var(--cyan);
-  box-shadow:0 0 8px var(--cyan),0 0 16px rgba(0,194,255,.4);
+.ring-a::after{
+  content:'';position:absolute;top:-6px;left:50%;
+  width:12px;height:12px;border-radius:50%;
+  background:radial-gradient(circle,#fff 0%,var(--gold) 50%,transparent 100%);
+  box-shadow:0 0 12px var(--gold),0 0 24px rgba(253,185,19,.5);
   transform:translateX(-50%);
 }
-
-/* Inner ring — smaller, counter-rotates */
-.ring-inner{
-  position:absolute;
-  top:0;left:0;right:0;bottom:0;margin:auto;
-  width:clamp(172px,50vw,232px);
-  height:clamp(172px,50vw,232px);
+/* Inner ring — cyan dashed */
+.ring-b{
+  position:absolute;top:0;left:0;right:0;bottom:0;margin:auto;
+  width:clamp(178px,52vw,236px);height:clamp(178px,52vw,236px);
   border-radius:50%;
-  border:1.5px dashed rgba(0,95,142,.25);
+  border:1.5px dashed rgba(0,159,227,.3);
+  animation:ringCCW 18s linear infinite;
   pointer-events:none;z-index:1;
-  animation:ringRotCCW 18s linear infinite;
 }
-/* Glowing dot on inner ring */
-.ring-inner::after{
-  content:'';
-  position:absolute;
-  top:50%;left:-5px;
-  width:8px;height:8px;border-radius:50%;
-  background:var(--blue);
-  box-shadow:0 0 6px rgba(0,95,142,.6);
+.ring-b::after{
+  content:'';position:absolute;top:50%;right:-5px;
+  width:10px;height:10px;border-radius:50%;
+  background:var(--cyan);
+  box-shadow:0 0 8px var(--cyan),0 0 16px rgba(60,200,255,.4);
   transform:translateY(-50%);
 }
-
-/* Wheel disc container — flex child, sits at centre of engine */
+/* Wheel disc */
 .wheel-wrap{
   position:relative;z-index:2;flex-shrink:0;
-  width:clamp(148px,44vw,196px);
-  height:clamp(148px,44vw,196px);
+  width:clamp(154px,45vw,202px);height:clamp(154px,45vw,202px);
 }
 .wheel-outer{position:relative;width:100%;height:100%}
-/* Pointer triangle — above the disc */
+/* Premium pointer */
 .wheel-ptr{
-  position:absolute;
-  top:-14px;left:50%;transform:translateX(-50%);
-  width:0;height:0;
-  border-left:7px solid transparent;
-  border-right:7px solid transparent;
-  border-top:16px solid var(--blue);
-  filter:drop-shadow(0 2px 4px rgba(0,0,0,.2));
-  z-index:10;
+  position:absolute;top:-16px;left:50%;transform:translateX(-50%);
+  z-index:10;pointer-events:none;
 }
-/* Wheel disc */
+.wheel-ptr::before{
+  content:'';display:block;
+  width:0;height:0;
+  border-left:9px solid transparent;
+  border-right:9px solid transparent;
+  border-top:22px solid var(--gold);
+  filter:drop-shadow(0 3px 8px rgba(253,185,19,.6));
+}
+/* Disc conic gradient */
 #wheelRing{
   position:absolute;inset:0;border-radius:50%;
   background:conic-gradient(
-    #E8335A   0deg  60deg,
-    #0284C7  60deg 120deg,
+    #DC2626   0deg  60deg,
+    #2563EB  60deg 120deg,
     #D97706 120deg 180deg,
     #7C3AED 180deg 240deg,
-    #10B981 240deg 300deg,
-    #005F8E 300deg 360deg
+    #059669 240deg 300deg,
+    #0F172A 300deg 360deg
   );
-  box-shadow:0 0 0 2.5px rgba(255,255,255,.15),0 6px 24px rgba(0,0,0,.25);
+  box-shadow:
+    0 0 0 3px rgba(255,255,255,.25),
+    0 0 0 6px rgba(0,159,227,.1),
+    0 10px 40px rgba(0,0,0,.35),
+    inset 0 2px 0 rgba(255,255,255,.15);
 }
 .wheel-labels{position:absolute;inset:0;border-radius:50%;pointer-events:none;z-index:3}
-.wl{position:absolute;top:50%;left:50%;font-family:var(--fm);font-size:clamp(6px,1.6vw,8px);font-weight:700;color:#fff;white-space:nowrap;text-shadow:0 1px 2px rgba(0,0,0,.5);transform-origin:0 0}
-/* Hub */
+.wl{position:absolute;top:50%;left:50%;font-family:var(--fm);font-size:clamp(6px,1.6vw,8px);font-weight:700;color:#fff;white-space:nowrap;text-shadow:0 1px 3px rgba(0,0,0,.7);transform-origin:0 0}
+/* Hub — glossy */
 .wheel-hub{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none;z-index:4}
 .wheel-hub-inner{
-  width:clamp(48px,14vw,62px);height:clamp(48px,14vw,62px);
-  border-radius:50%;
-  background:var(--card);
-  border:2.5px solid rgba(0,95,142,.12);
-  box-shadow:0 2px 10px rgba(0,0,0,.15);
+  width:clamp(52px,15vw,68px);height:clamp(52px,15vw,68px);border-radius:50%;
+  background:linear-gradient(145deg,#ffffff 0%,#e0f2ff 40%,#c8e8f8 100%);
+  border:3px solid rgba(255,255,255,.9);
+  box-shadow:0 4px 16px rgba(0,0,0,.2),0 0 0 2px rgba(0,159,227,.15),inset 0 2px 4px rgba(255,255,255,.8);
   display:flex;flex-direction:column;align-items:center;justify-content:center;
 }
-#hubTxt{font-family:var(--fm);font-size:clamp(8px,2vw,11px);font-weight:700;color:var(--blue);line-height:1.1}
-#hubLbl{font-size:clamp(6px,1.6vw,8px);color:var(--t3);line-height:1;margin-top:1px}
+#hubTxt{font-family:var(--fm);font-size:clamp(9px,2.2vw,12px);font-weight:800;color:var(--navy);line-height:1.1;letter-spacing:.3px}
+#hubLbl{font-size:clamp(6px,1.5vw,8px);color:var(--t3);line-height:1;margin-top:1px}
 
-/* Spin button — below the engine in flex column */
+/* Spin button */
 .spin-btn{
   flex-shrink:0;z-index:5;
-  padding:11px 28px;border-radius:var(--rp);border:none;cursor:pointer;
-  background:linear-gradient(135deg,var(--blue) 0%,var(--blue3) 100%);
-  color:#fff;font-family:var(--f);font-size:13px;font-weight:700;
-  box-shadow:0 4px 14px rgba(0,95,142,.35);
+  position:relative;overflow:hidden;
+  min-width:180px;
+  padding:14px 36px;border-radius:var(--rp);border:none;cursor:pointer;
+  background:linear-gradient(135deg,var(--p) 0%,var(--p2) 50%,var(--navy2) 100%);
+  color:#fff;font-family:var(--f);font-size:15px;font-weight:800;
+  box-shadow:0 6px 24px rgba(0,159,227,.45),0 2px 8px rgba(0,0,0,.15),inset 0 1px 0 rgba(255,255,255,.2);
   transition:transform .14s var(--sp),box-shadow .2s;
-  position:relative;overflow:hidden;white-space:nowrap;
+  letter-spacing:.02em;white-space:nowrap;
 }
-.spin-btn:active{transform:scale(.96)}
-.spin-btn:disabled{opacity:.6;cursor:not-allowed;box-shadow:none}
-
-/* ── ZONE 4: INFO CHIPS ── */
-.info-zone{flex-shrink:0;background:var(--bg);padding:5px 16px 4px}
-.info-row{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;justify-content:center}
-.info-row::-webkit-scrollbar{display:none}
-.info-chip{flex-shrink:0;display:flex;align-items:center;gap:5px;padding:6px 12px;border-radius:var(--rp);border:1.5px solid rgba(0,95,142,.12);background:var(--card);font-size:11px;font-weight:500;color:var(--t2);white-space:nowrap;box-shadow:0 1px 3px rgba(0,0,0,.04)}
-.info-chip svg{display:block;stroke:var(--blue);fill:none;stroke-width:2;stroke-linecap:round;width:12px;height:12px;flex-shrink:0}
-
-/* ── ZONE 5: CTA BUTTON ── */
-.pay-zone{flex-shrink:0;background:var(--bg);padding:4px 16px max(14px,env(safe-area-inset-bottom))}
-.pay-btn{width:100%;min-height:52px;padding:12px 18px;border:none;border-radius:var(--r20);cursor:pointer;background:linear-gradient(135deg,var(--blue) 0%,var(--blue2) 60%,var(--blue3) 100%);display:flex;align-items:center;justify-content:space-between;box-shadow:0 6px 20px rgba(0,95,142,.35),0 2px 6px rgba(0,0,0,.1),inset 0 1px 0 rgba(255,255,255,.12);transition:box-shadow .2s,transform .14s var(--sp);position:relative;overflow:hidden;outline:none}
-.pay-btn:active{transform:scale(.97)}
-.pay-left{display:flex;align-items:center;gap:10px;pointer-events:none}
-.pay-icon{width:32px;height:32px;border-radius:10px;background:rgba(255,255,255,.15);display:flex;align-items:center;justify-content:center}
-.pay-icon svg{display:block}
-.pay-title{font-size:14px;font-weight:700;color:#fff;line-height:1.3}
-.pay-sub{font-size:10px;color:rgba(255,255,255,.6);margin-top:1px}
-.pay-right{text-align:right;pointer-events:none}
-.pay-lbl{font-size:9px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;color:rgba(255,255,255,.5);margin-bottom:1px}
-.pay-prize{font-family:var(--fm);font-size:16px;font-weight:700;color:#fff}
-
-/* ── OVERLAY SHEETS ── */
-.overlay{position:fixed;inset:0;z-index:400;background:rgba(0,45,80,.5);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);display:none;align-items:flex-end}
-.overlay.open,.overlay.show{display:flex}
-.sheet{width:100%;background:var(--card);border-radius:var(--r24) var(--r24) 0 0;padding-bottom:max(28px,env(safe-area-inset-bottom));animation:shUp .3s var(--ease);box-shadow:0 -8px 40px rgba(0,0,0,.18);max-height:88dvh;overflow-y:auto}
-.sh-drag{width:36px;height:4px;background:#E2E8F0;border-radius:var(--rp);margin:12px auto 0}
-.sh-inner{padding:16px 24px 0}
-/* Result */
-.rs-eyebrow{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.7px;color:var(--t4);margin-bottom:4px}
-.rs-pts{font-family:var(--fm);font-size:48px;font-weight:700;color:var(--blue);line-height:1;letter-spacing:-.04em}
-.rs-pts-sub{font-size:13px;color:var(--t3);margin-bottom:4px}
-.rs-usd{font-family:var(--fm);font-size:20px;font-weight:600;color:var(--ok);margin-bottom:16px}
-.rs-chips{display:flex;gap:8px;margin-bottom:16px}
-.rs-chip{flex:1;background:var(--bg);border-radius:var(--r12);padding:10px;text-align:center;border:1px solid var(--line)}
-.rs-chip-val{font-family:var(--fm);font-size:13px;font-weight:700;color:var(--t1)}
-.rs-chip-lbl{font-size:10px;color:var(--t3);margin-top:2px}
-.rs-btns{display:flex;flex-direction:column;gap:8px}
-.redeem-btn{padding:15px;border-radius:var(--r16);border:none;cursor:pointer;background:linear-gradient(135deg,var(--blue) 0%,var(--blue3) 100%);color:#fff;font-family:var(--f);font-size:15px;font-weight:700;box-shadow:0 4px 14px rgba(0,95,142,.3);transition:transform .14s;position:relative;overflow:hidden}
-.redeem-btn:active{transform:scale(.97)}
-.again-btn{padding:12px;border-radius:var(--r16);border:1.5px solid var(--line);background:transparent;font-family:var(--f);font-size:14px;font-weight:500;color:var(--t3);cursor:pointer}
-/* Drawn sheet */
-.ds-icon{font-size:36px;text-align:center;margin:4px 0 8px}
-.ds-title{font-size:18px;font-weight:700;color:var(--t1);text-align:center;letter-spacing:-.3px;margin-bottom:4px}
-.ds-sub{font-size:13px;color:var(--t3);text-align:center;margin-bottom:12px}
-.ds-pts{font-family:var(--fm);font-size:38px;font-weight:700;color:var(--blue);text-align:center;line-height:1;letter-spacing:-.03em}
-.ds-usd{font-family:var(--fm);font-size:16px;color:var(--ok);text-align:center;margin-bottom:16px}
-.ds-btn{width:100%;padding:15px;border-radius:var(--r16);border:none;cursor:pointer;background:linear-gradient(135deg,var(--blue) 0%,var(--blue3) 100%);color:#fff;font-family:var(--f);font-size:15px;font-weight:700;box-shadow:0 4px 14px rgba(0,95,142,.3);transition:transform .14s;position:relative;overflow:hidden}
-.ds-btn:active{transform:scale(.97)}
-
-
-/* ── DRAWN STATE: already spun today ── */
+/* Animated shine sweep */
+.spin-btn::after{
+  content:'';position:absolute;top:0;bottom:0;
+  left:-100%;width:40%;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.25),transparent);
+  animation:shine 2.5s ease-in-out infinite;
+}
+.spin-btn:active{transform:scale(.96);box-shadow:0 3px 12px rgba(0,159,227,.3)}
+.spin-btn:disabled{opacity:.65;cursor:not-allowed;box-shadow:none}
+.spin-btn:disabled::after{display:none}
 .spin-btn.drawn{
-  background:linear-gradient(135deg,var(--ok) 0%,#059669 100%);
-  box-shadow:0 4px 14px rgba(16,185,129,.35);
+  background:linear-gradient(135deg,var(--ok) 0%,#047857 100%);
+  box-shadow:0 4px 16px rgba(16,185,129,.4);
   cursor:default;
 }
 .spin-btn.drawn:active{transform:none}
-.pay-btn.drawn{
-  background:linear-gradient(135deg,#0F766E 0%,#0D9488 60%,#0F766E 100%);
-}
-.pay-btn.drawn .pay-prize{color:rgba(255,255,255,.9)}
+/* Drawn indicator */
 .drawn-indicator{
-  display:none;
-  align-items:center;justify-content:center;gap:6px;
-  padding:6px 0 0;
-  font-size:11px;font-weight:600;color:var(--ok);
-  letter-spacing:.2px;
+  display:none;align-items:center;justify-content:center;gap:6px;
+  font-size:12px;font-weight:600;color:var(--ok);
 }
 .drawn-indicator.show{display:flex}
-.drawn-indicator svg{display:block;flex-shrink:0}
 
-/* ── TOAST / NUDGE ── */
-.toast{position:fixed;bottom:max(86px,calc(78px + env(safe-area-inset-bottom)));left:16px;right:16px;z-index:600;display:flex;align-items:center;gap:10px;padding:12px 16px;border-radius:var(--r16);background:var(--t1);color:#fff;font-size:14px;box-shadow:0 6px 24px rgba(0,0,0,.2);opacity:0;transform:translateY(8px) scale(.96);pointer-events:none;transition:opacity .2s,transform .2s var(--ease)}
-.toast.show{opacity:1;transform:none;pointer-events:auto}
-.cf{position:fixed;pointer-events:none;z-index:9000;animation:cf-fall linear both}
+/* ══════════════════════════════════════
+   ZONE 3 — PRIZE SHOWCASE
+   ══════════════════════════════════════ */
+.prize-zone{flex-shrink:0;background:var(--sky);padding:2px 16px 4px}
+.prize-scroll{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;padding:2px 1px}
+.prize-scroll::-webkit-scrollbar{display:none}
+.prize-card{
+  flex-shrink:0;
+  width:90px;
+  background:var(--white);
+  border:1.5px solid rgba(0,159,227,.1);
+  border-radius:var(--r16);
+  padding:10px 8px;
+  display:flex;flex-direction:column;align-items:center;gap:5px;
+  box-shadow:0 2px 8px rgba(0,0,0,.06);
+  transition:transform .14s var(--sp);
+}
+.prize-card:active{transform:scale(.96) translateY(-2px)}
+.prize-icon-wrap{
+  width:38px;height:38px;border-radius:var(--r12);
+  display:flex;align-items:center;justify-content:center;
+  font-size:20px;line-height:1;
+}
+.pc-car   .prize-icon-wrap{background:linear-gradient(135deg,#DBEAFE,#EFF6FF)}
+.pc-cash  .prize-icon-wrap{background:linear-gradient(135deg,#D1FAE5,#ECFDF5)}
+.pc-phone .prize-icon-wrap{background:linear-gradient(135deg,#EDE9FE,#F5F3FF)}
+.pc-trip  .prize-icon-wrap{background:linear-gradient(135deg,#FEF3C7,#FFFBEB)}
+.pc-solar .prize-icon-wrap{background:linear-gradient(135deg,#FEE2E2,#FFF1F2)}
+.pc-groc  .prize-icon-wrap{background:linear-gradient(135deg,#CCFBF1,#F0FDF4)}
+.prize-name{font-size:9px;font-weight:700;color:var(--t1);text-align:center;line-height:1.3;letter-spacing:.1px}
+.prize-desc{font-size:8px;color:var(--t3);text-align:center;line-height:1.3}
 
-/* ── AI FAB ── */
-.ai-fab{position:fixed;bottom:max(140px,calc(130px + env(safe-area-inset-bottom)));right:16px;width:44px;height:44px;border-radius:50%;background:var(--cyan);border:none;cursor:pointer;z-index:8000;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 16px rgba(0,194,255,.35);transition:transform .14s var(--sp),opacity .2s;outline:none}
+/* ══════════════════════════════════════
+   ZONE 4 — CTA CARD
+   ══════════════════════════════════════ */
+.cta-zone{
+  flex-shrink:0;
+  background:var(--sky);
+  padding:3px 16px max(16px,env(safe-area-inset-bottom));
+}
+.cta-btn{
+  width:100%;min-height:60px;padding:13px 18px;border:none;
+  border-radius:var(--r24);cursor:pointer;
+  background:linear-gradient(135deg,var(--p) 0%,var(--p2) 55%,var(--navy) 100%);
+  display:flex;align-items:center;justify-content:space-between;
+  box-shadow:0 8px 28px rgba(0,159,227,.4),0 2px 8px rgba(0,0,0,.12),inset 0 1px 0 rgba(255,255,255,.14);
+  transition:box-shadow .2s,transform .14s var(--sp);
+  position:relative;overflow:hidden;outline:none;
+}
+.cta-btn::after{
+  content:'';position:absolute;top:0;bottom:0;
+  left:-100%;width:35%;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.12),transparent);
+  animation:shine 3s ease-in-out infinite 1s;
+}
+.cta-btn:active{transform:scale(.98);box-shadow:0 4px 14px rgba(0,159,227,.25)}
+.cta-btn.drawn{background:linear-gradient(135deg,#0F766E 0%,#0D9488 55%,#134E4A 100%)}
+.cta-left{display:flex;align-items:center;gap:12px;pointer-events:none}
+.cta-icon{
+  width:40px;height:40px;border-radius:14px;
+  background:rgba(255,255,255,.15);
+  border:1px solid rgba(255,255,255,.12);
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;
+}
+.cta-icon svg{display:block;stroke:#fff;fill:none;stroke-width:2;stroke-linecap:round}
+.cta-title{font-size:15px;font-weight:800;color:#fff;line-height:1.25;letter-spacing:-.01em}
+.cta-sub{font-size:10px;color:rgba(255,255,255,.6);margin-top:2px}
+.cta-right{text-align:right;pointer-events:none;flex-shrink:0}
+.cta-lbl{font-size:9px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;color:rgba(255,255,255,.5);margin-bottom:2px}
+.cta-prize{font-family:var(--fm);font-size:17px;font-weight:700;color:#fff;letter-spacing:-.01em}
+
+/* ══════════════════════════════════════
+   OVERLAY SHEETS
+   ══════════════════════════════════════ */
+.overlay{position:fixed;inset:0;z-index:400;background:rgba(0,20,40,.6);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);display:none;align-items:flex-end}
+.overlay.open,.overlay.show{display:flex}
+.sheet{
+  width:100%;background:var(--white);
+  border-radius:var(--r24) var(--r24) 0 0;
+  padding-bottom:max(28px,env(safe-area-inset-bottom));
+  animation:shUp .3s var(--ease);
+  box-shadow:0 -12px 60px rgba(0,0,0,.25);
+  max-height:88dvh;overflow-y:auto;
+}
+.sh-drag{width:40px;height:4px;background:#E2E8F0;border-radius:var(--rp);margin:12px auto 0}
+.sh-body{padding:18px 24px 0}
+
+/* Result sheet */
+.rs-anim{width:64px;height:64px;border-radius:50%;margin:0 auto 14px;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,var(--p),var(--navy));box-shadow:0 6px 24px rgba(0,159,227,.35);animation:goldPop .5s var(--sp) both}
+.rs-anim svg{stroke:#fff;fill:none;stroke-width:3;stroke-linecap:round;width:28px;height:28px}
+.rs-eyebrow{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--t4);margin-bottom:4px;text-align:center}
+.rs-pts{font-family:var(--fm);font-size:54px;font-weight:700;color:var(--navy);line-height:1;letter-spacing:-.04em;text-align:center}
+.rs-pts-sub{font-size:13px;color:var(--t3);margin-bottom:4px;text-align:center}
+.rs-usd{font-family:var(--fm);font-size:22px;font-weight:700;color:var(--p);margin-bottom:18px;text-align:center}
+.rs-chips{display:flex;gap:8px;margin-bottom:18px}
+.rs-chip{flex:1;background:var(--sky);border-radius:var(--r12);padding:11px 8px;text-align:center;border:1px solid var(--line)}
+.rs-chip-val{font-family:var(--fm);font-size:13px;font-weight:700;color:var(--t1)}
+.rs-chip-lbl{font-size:10px;color:var(--t3);margin-top:3px}
+.rs-btns{display:flex;flex-direction:column;gap:9px}
+.redeem-btn{padding:17px;border-radius:var(--r20);border:none;cursor:pointer;background:linear-gradient(135deg,var(--p) 0%,var(--navy) 100%);color:#fff;font-family:var(--f);font-size:15px;font-weight:800;box-shadow:0 6px 20px rgba(0,159,227,.35);transition:transform .14s;position:relative;overflow:hidden;letter-spacing:.01em}
+.redeem-btn:active{transform:scale(.97)}
+.again-btn{padding:14px;border-radius:var(--r20);border:1.5px solid var(--line);background:transparent;font-family:var(--f);font-size:13px;font-weight:600;color:var(--t3);cursor:pointer;transition:background .14s}
+.again-btn:active{background:var(--sky)}
+
+/* Drawn sheet */
+.ds-head{
+  background:linear-gradient(135deg,var(--navy) 0%,var(--p2) 100%);
+  border-radius:var(--r24) var(--r24) 0 0;
+  padding:24px 24px 20px;text-align:center;
+  position:relative;overflow:hidden;
+}
+.ds-head::after{content:'';position:absolute;top:-30px;right:-20px;width:130px;height:130px;border-radius:50%;background:rgba(60,200,255,.1)}
+.ds-trophy{font-size:44px;display:block;margin-bottom:10px;position:relative;z-index:1}
+.ds-hed{font-size:20px;font-weight:800;color:#fff;letter-spacing:-.3px;position:relative;z-index:1}
+.ds-sub{font-size:12px;color:rgba(255,255,255,.6);margin-top:4px;line-height:1.5;position:relative;z-index:1}
+.ds-body{padding:20px 24px 0;text-align:center}
+.ds-pts{font-family:var(--fm);font-size:48px;font-weight:700;color:var(--navy);line-height:1;letter-spacing:-.04em;margin-bottom:4px}
+.ds-usd{font-family:var(--fm);font-size:20px;font-weight:700;color:var(--p);margin-bottom:4px}
+.ds-rate{font-size:11px;color:var(--t3);margin-bottom:20px}
+.ds-btn{width:100%;padding:17px;border-radius:var(--r20);border:none;cursor:pointer;background:linear-gradient(135deg,var(--p) 0%,var(--navy) 100%);color:#fff;font-family:var(--f);font-size:15px;font-weight:800;box-shadow:0 6px 20px rgba(0,159,227,.35);transition:transform .14s;position:relative;overflow:hidden;letter-spacing:.01em}
+.ds-btn:active{transform:scale(.97)}
+
+/* Ripple */
+.rip{position:absolute;border-radius:50%;pointer-events:none;background:rgba(255,255,255,.25);transform:scale(0);animation:ripAnim .55s cubic-bezier(.4,0,.2,1) forwards}
+
+/* Confetti */
+.cf{position:fixed;pointer-events:none;z-index:9000;animation:cffall linear both}
+
+/* ══════════════════════════════════════
+   AI FAB + CHAT PANEL
+   ══════════════════════════════════════ */
+.ai-fab{
+  position:fixed;bottom:max(78px,calc(70px + env(safe-area-inset-bottom)));right:16px;
+  width:48px;height:48px;border-radius:50%;
+  background:linear-gradient(135deg,var(--p),var(--navy));
+  border:none;cursor:pointer;z-index:8000;
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:0 4px 20px rgba(0,159,227,.45);
+  transition:transform .14s var(--sp),opacity .2s;outline:none;
+}
 .ai-fab:active{transform:scale(.86)}
-.ai-fab svg{display:block;stroke:var(--blue);fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round;width:19px;height:19px}
-.ai-badge{position:absolute;top:-3px;right:-3px;width:16px;height:16px;border-radius:50%;background:#EF4444;border:2px solid var(--bg);font-size:9px;font-weight:700;color:#fff;display:flex;align-items:center;justify-content:center;opacity:0;transform:scale(0);transition:opacity .2s,transform .22s var(--sp)}
+.ai-fab svg{display:block;stroke:#fff;fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round;width:20px;height:20px}
+.ai-badge{position:absolute;top:-3px;right:-3px;width:17px;height:17px;border-radius:50%;background:var(--gold);border:2.5px solid var(--sky);font-size:9px;font-weight:800;color:var(--navy);display:flex;align-items:center;justify-content:center;opacity:0;transform:scale(0);transition:opacity .2s,transform .22s var(--sp)}
 .ai-badge.show{opacity:1;transform:scale(1)}
-/* Chat panel */
-.ai-panel{position:fixed;bottom:max(196px,calc(186px + env(safe-area-inset-bottom)));right:16px;left:16px;background:var(--card);border-radius:var(--r20);box-shadow:0 12px 48px rgba(0,0,0,.18),0 0 0 1px rgba(0,95,142,.1);z-index:8001;display:flex;flex-direction:column;overflow:hidden;transform:translateY(10px) scale(.98);opacity:0;transition:transform .24s var(--ease),opacity .2s;pointer-events:none;height:52dvh;max-height:440px}
+.ai-panel{position:fixed;bottom:max(136px,calc(126px + env(safe-area-inset-bottom)));right:16px;left:16px;background:var(--white);border-radius:var(--r20);box-shadow:0 16px 56px rgba(0,0,0,.18),0 0 0 1px rgba(0,159,227,.1);z-index:8001;display:flex;flex-direction:column;overflow:hidden;transform:translateY(10px) scale(.98);opacity:0;transition:transform .25s var(--ease),opacity .2s;pointer-events:none;height:50dvh;max-height:420px}
 .ai-panel.open{transform:translateY(0) scale(1);opacity:1;pointer-events:auto}
-.ai-head{background:var(--blue);padding:13px 16px;display:flex;align-items:center;gap:12px;flex-shrink:0;border-radius:var(--r20) var(--r20) 0 0}
-.ai-av{width:30px;height:30px;border-radius:50%;background:rgba(255,255,255,.15);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.ai-head{background:linear-gradient(135deg,var(--navy),var(--p2));padding:14px 16px;display:flex;align-items:center;gap:12px;flex-shrink:0;border-radius:var(--r20) var(--r20) 0 0}
+.ai-av{width:32px;height:32px;border-radius:50%;background:rgba(255,255,255,.15);display:flex;align-items:center;justify-content:center;flex-shrink:0}
 .ai-av img{width:18px;height:18px;object-fit:contain}
 .ai-name{font-size:13px;font-weight:700;color:#fff;line-height:1.2}
 .ai-status{font-size:10px;color:rgba(255,255,255,.5);display:flex;align-items:center;gap:4px}
 .ai-sdot{width:5px;height:5px;border-radius:50%;background:var(--ok)}
-.ai-x{margin-left:auto;background:none;border:none;cursor:pointer;color:rgba(255,255,255,.45);font-size:16px;padding:4px 6px;outline:none}
+.ai-x{margin-left:auto;background:none;border:none;cursor:pointer;color:rgba(255,255,255,.4);font-size:17px;padding:4px 6px;outline:none}
 .ai-msgs{flex:1;overflow-y:auto;padding:12px;display:flex;flex-direction:column;gap:8px;min-height:0}
 .ai-msgs::-webkit-scrollbar{display:none}
-.ai-bub{max-width:82%;padding:10px 14px;font-size:14px;line-height:1.5;word-break:break-word;border-radius:16px}
-.ai-bub.bot{background:#F1F5F9;color:var(--t1);border-bottom-left-radius:3px;align-self:flex-start}
-.ai-bub.usr{background:var(--blue);color:#fff;border-bottom-right-radius:3px;align-self:flex-end}
-.ai-typ{display:flex;gap:3px;align-items:center;padding:9px 12px;background:#F1F5F9;border-radius:14px;border-bottom-left-radius:3px;align-self:flex-start}
-.ai-typ span{width:6px;height:6px;border-radius:50%;background:#CBD5E1;animation:tdot 1.2s ease-in-out infinite}
+.ai-bub{max-width:82%;padding:10px 14px;font-size:14px;line-height:1.5;word-break:break-word;border-radius:18px}
+.ai-bub.bot{background:var(--sky2);color:var(--t1);border-bottom-left-radius:4px;align-self:flex-start}
+.ai-bub.usr{background:var(--p);color:#fff;border-bottom-right-radius:4px;align-self:flex-end}
+.ai-typ{display:flex;gap:3px;align-items:center;padding:10px 13px;background:var(--sky2);border-radius:14px;border-bottom-left-radius:4px;align-self:flex-start}
+.ai-typ span{width:6px;height:6px;border-radius:50%;background:#A8C8DC;animation:tdot 1.2s ease-in-out infinite}
 .ai-typ span:nth-child(2){animation-delay:.2s}.ai-typ span:nth-child(3){animation-delay:.4s}
 .ai-chips{display:flex;flex-wrap:wrap;gap:5px;padding:0 12px 8px;flex-shrink:0}
-.ai-chip{font-size:11px;font-weight:500;color:var(--blue);background:var(--cdim);border:1px solid rgba(0,95,142,.12);padding:5px 10px;border-radius:var(--rp);cursor:pointer;white-space:nowrap}
-.ai-footer{display:flex;gap:8px;padding:10px 14px 12px;border-top:1px solid #E8EFF6;flex-shrink:0;background:var(--card)}
-.ai-input{flex:1;border:1.5px solid #E2E8F0;border-radius:var(--rp);padding:10px 14px;font-family:var(--f);font-size:14px;color:var(--t1);background:#F8FAFC;outline:none;transition:border-color .15s;-webkit-user-select:text;user-select:text;min-height:44px}
-.ai-input:focus{border-color:var(--cyan)}
-.ai-send{width:40px;height:40px;border-radius:50%;border:none;cursor:pointer;background:var(--blue);display:flex;align-items:center;justify-content:center;flex-shrink:0;outline:none;transition:transform .14s;box-shadow:0 2px 8px rgba(0,95,142,.28)}
+.ai-chip{font-size:11px;font-weight:600;color:var(--p);background:rgba(0,159,227,.08);border:1px solid rgba(0,159,227,.18);padding:5px 11px;border-radius:var(--rp);cursor:pointer;white-space:nowrap}
+.ai-footer{display:flex;gap:8px;padding:10px 14px 12px;border-top:1px solid #EEF4F8;flex-shrink:0;background:var(--white)}
+.ai-input{flex:1;border:1.5px solid #D0E8F4;border-radius:var(--rp);padding:10px 15px;font-family:var(--f);font-size:14px;color:var(--t1);background:var(--sky);outline:none;transition:border-color .15s;-webkit-user-select:text;user-select:text;min-height:44px}
+.ai-input:focus{border-color:var(--p)}
+.ai-send{width:42px;height:42px;border-radius:50%;border:none;cursor:pointer;background:linear-gradient(135deg,var(--p),var(--navy));display:flex;align-items:center;justify-content:center;flex-shrink:0;outline:none;transition:transform .14s;box-shadow:0 2px 10px rgba(0,159,227,.35)}
 .ai-send:active{transform:scale(.86)}
 .ai-send svg{display:block;stroke:#fff;fill:none;stroke-width:2.2;stroke-linecap:round;width:14px;height:14px}
-.rip{position:absolute;border-radius:50%;pointer-events:none;background:rgba(255,255,255,.22);transform:scale(0);animation:ripAnim .5s cubic-bezier(.4,0,.2,1) forwards}
 </style>
 </head>
 <body>
 
 <!-- CURTAIN -->
 <div class="curtain" id="curtain">
-  <div class="c-brand"><img src="assets/ecocash.png" alt="EcoCash"><div class="c-sep"></div><img src="assets/econet.png" alt="Econet"></div>
-  <div class="c-ring"><svg width="40" height="40" viewBox="0 0 44 44" fill="none"><circle cx="22" cy="22" r="18" stroke="rgba(255,255,255,.15)" stroke-width="3"/><path d="M22 4a18 18 0 0 1 18 18" stroke="#00C2FF" stroke-width="3" stroke-linecap="round"/></svg></div>
-  <div><div id="cLbl">Loading</div><div id="cSub">Connecting to EcoCash…</div></div>
+  <div class="c-brand"><img src="assets/ecocash.png" alt="EcoCash"><div class="c-vsep"></div><img src="assets/econet.png" alt="Econet"></div>
+  <div class="c-spin"><svg width="40" height="40" viewBox="0 0 44 44" fill="none"><circle cx="22" cy="22" r="18" stroke="rgba(255,255,255,.15)" stroke-width="3"/><path d="M22 4a18 18 0 0 1 18 18" stroke="#FDB913" stroke-width="3" stroke-linecap="round"/></svg></div>
+  <div><div id="cLbl">ChakaChaya</div><div id="cSub">neEcoCash 2026 · Loading…</div></div>
   <div class="c-bar"><div class="c-fill"></div></div>
-  <div class="c-dots"><div class="c-dot" id="cd0"></div><div class="c-dot" id="cd1"></div><div class="c-dot" id="cd2"></div></div>
+  <div class="c-dots"><div class="cdot" id="cd0"></div><div class="cdot" id="cd1"></div><div class="cdot" id="cd2"></div></div>
 </div>
 
 <div class="app" id="screen">
 
-  <!-- ZONE 1: HEADER -->
-  <div class="hdr">
-    <div class="logo"><img src="assets/ecocash.png" alt="EcoCash"><div class="logo-sep"></div><img src="assets/econet.png" alt="Econet"></div>
-    <div class="live"><div class="live-dot"></div><span id="liveCount">Loading…</span></div>
+  <!-- ═══ HERO ═══ -->
+  <div class="hero">
+    <!-- Floating decorative circles -->
+    <div class="hero-circle hc1"></div>
+    <div class="hero-circle hc2"></div>
+    <div class="hero-circle hc3"></div>
+
+    <!-- Nav -->
+    <div class="hero-nav">
+      <div class="h-logos">
+        <img src="assets/ecocash.png" alt="EcoCash">
+        <div class="h-logos-sep"></div>
+        <img src="assets/econet.png" alt="Econet">
+      </div>
+      <div class="h-badge">8th Year · 2026</div>
+      <div class="h-pts-pill">
+        <span class="h-pts-lbl">pts</span>
+        <span class="h-pts-val" id="myPts">—</span>
+        <div class="live-dot"></div>
+      </div>
+    </div>
+
+    <!-- Text -->
+    <div class="hero-body">
+      <div class="hero-eyebrow">EcoCash Rewards Programme</div>
+      <div class="hero-title">ChakaChaya <span class="h-acc">neEcoCash</span></div>
+      <div class="hero-sub">Ziyawa · Earn points every time you transact</div>
+      <div class="prize-pill">
+        <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+        US$400,000+ Rewards · 10 Brand‑New Cars
+      </div>
+    </div>
+
+    <!-- Stat cards -->
+    <div class="hero-stats">
+      <div class="stat-card">
+        <div class="stat-val">1pt</div>
+        <div class="stat-lbl">per US$1</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-val">2×</div>
+        <div class="stat-lbl">Super App</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-val">30</div>
+        <div class="stat-lbl">pts weekly</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-val">500</div>
+        <div class="stat-lbl">Grand prize</div>
+      </div>
+    </div>
   </div>
 
-  <!-- ZONE 2: HEADING -->
-  <div class="zone-heading">
-    <div class="zone-heading-title">ChakaChaya <span>· Ziyawa</span></div>
-    <div class="zone-heading-sub">Spin &amp; win cash · One draw per day · EcoCash customers</div>
-  </div>
+  <!-- Curve connector -->
+  <div class="hero-curve"></div>
 
-  <!-- ZONE 3: WHEEL ENGINE -->
+  <!-- ═══ WHEEL ═══ -->
   <div class="wheel-zone" id="wheelZone">
+    <div class="w-glow"></div>
 
-    <!-- Background glow (absolute, purely decorative) -->
-    <div class="wheel-glow"></div>
-
-    <!-- Engine: rings + disc as one centred unit -->
     <div class="wheel-engine" id="wheelEngine">
-
-      <!-- Outer orbital ring (pure CSS rotation, no translate) -->
-      <div class="ring-outer"></div>
-
-      <!-- Inner orbital ring (pure CSS counter-rotation, no translate) -->
-      <div class="ring-inner"></div>
-
-      <!-- The actual wheel disc -->
+      <div class="ring-a"></div>
+      <div class="ring-b"></div>
       <div class="wheel-wrap">
         <div class="wheel-outer" id="wheelOuter">
           <div class="wheel-ptr"></div>
@@ -389,41 +575,42 @@ html,body{width:100%;height:100%;height:100dvh;overflow:hidden;font-family:var(-
           </div>
         </div>
       </div>
-
-    </div><!-- /wheel-engine -->
-
-    <!-- Spin button — below engine in flex column -->
-    <button class="spin-btn" id="spinBtn" onclick="startSpin(event)">Spin the Wheel</button>
-    <div class="drawn-indicator" id="drawnIndicator">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
-      You already drew today · Come back tomorrow
     </div>
 
-  </div><!-- /wheel-zone -->
-
-  <!-- ZONE 4: INFO CHIPS -->
-  <div class="info-zone">
-    <div class="info-row">
-      <div class="info-chip"><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>Up to USD 2,500</div>
-      <div class="info-chip"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>1 spin/day</div>
-      <div class="info-chip"><svg viewBox="0 0 24 24"><polyline points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>Instant cash</div>
-      <div class="info-chip"><svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>256-bit SSL</div>
+    <button class="spin-btn" id="spinBtn" onclick="startSpin(event)">🎰 &nbsp;Spin the Wheel</button>
+    <div class="drawn-indicator" id="drawnIndicator">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+      Already spun today · Come back tomorrow
     </div>
   </div>
 
-  <!-- ZONE 5: CTA -->
-  <div class="pay-zone">
-    <button class="pay-btn" id="ctaBtn" onclick="openWheel(event)">
-      <div class="pay-left">
-        <div class="pay-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></div>
+  <!-- ═══ PRIZE SHOWCASE ═══ -->
+  <div class="prize-zone">
+    <div class="prize-scroll">
+      <div class="prize-card pc-car" ><div class="prize-icon-wrap">🚗</div><div class="prize-name">Brand New Car</div><div class="prize-desc">10 to be won</div></div>
+      <div class="prize-card pc-cash" ><div class="prize-icon-wrap">💵</div><div class="prize-name">Cash Rewards</div><div class="prize-desc">Up to US$2,500</div></div>
+      <div class="prize-card pc-phone"><div class="prize-icon-wrap">📱</div><div class="prize-name">Smartphone</div><div class="prize-desc">Weekly draw</div></div>
+      <div class="prize-card pc-trip" ><div class="prize-icon-wrap">✈️</div><div class="prize-name">Vic Falls Trip</div><div class="prize-desc">All expenses</div></div>
+      <div class="prize-card pc-solar"><div class="prize-icon-wrap">☀️</div><div class="prize-name">Solar System</div><div class="prize-desc">Weekly draw</div></div>
+      <div class="prize-card pc-groc" ><div class="prize-icon-wrap">🛒</div><div class="prize-name">Groceries</div><div class="prize-desc">Monthly draw</div></div>
+    </div>
+  </div>
+
+  <!-- ═══ CTA ═══ -->
+  <div class="cta-zone">
+    <button class="cta-btn" id="ctaBtn" onclick="openWheel(event)">
+      <div class="cta-left">
+        <div class="cta-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+        </div>
         <div>
-          <div class="pay-title">Check Now · Tarinda</div>
-          <div class="pay-sub">No entry fee · Open to all EcoCash customers</div>
+          <div class="cta-title" id="ctaTitle">Check My Winnings</div>
+          <div class="cta-sub"  id="ctaSub">No entry fee · All EcoCash customers eligible</div>
         </div>
       </div>
-      <div class="pay-right">
-        <div class="pay-lbl">Win up to</div>
-        <div class="pay-prize">USD 2,500</div>
+      <div class="cta-right">
+        <div class="cta-lbl"   id="ctaLbl">Total prizes</div>
+        <div class="cta-prize" id="ctaPrize">US$400K+</div>
       </div>
     </button>
   </div>
@@ -434,8 +621,9 @@ html,body{width:100%;height:100%;height:100dvh;overflow:hidden;font-family:var(-
 <div class="overlay" id="resultWrap">
   <div class="sheet">
     <div class="sh-drag"></div>
-    <div class="sh-inner">
-      <div class="rs-eyebrow">Wakunda! · You won!</div>
+    <div class="sh-body">
+      <div class="rs-anim"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
+      <div class="rs-eyebrow">Wakunda! · You Won!</div>
       <div class="rs-pts" id="rPts">0</div>
       <div class="rs-pts-sub">ChakaChaya Points</div>
       <div class="rs-usd" id="rUsd">= USD 0.00</div>
@@ -446,7 +634,7 @@ html,body{width:100%;height:100%;height:100dvh;overflow:hidden;font-family:var(-
       </div>
       <div class="rs-btns">
         <button class="redeem-btn" onclick="doRedeem()">Redeem <span id="redeemAmt">USD 0.00</span> to EcoCash</button>
-        <button class="again-btn" onclick="resetSpin()">Try Again Tomorrow</button>
+        <button class="again-btn"  onclick="resetSpin()">Try Again Tomorrow</button>
       </div>
     </div>
   </div>
@@ -455,21 +643,19 @@ html,body{width:100%;height:100%;height:100dvh;overflow:hidden;font-family:var(-
 <!-- DRAWN SHEET -->
 <div class="overlay" id="drawnBanner" onclick="if(event.target===this)closeDrawnBanner()">
   <div class="sheet">
-    <div class="sh-drag"></div>
-    <div class="sh-inner">
-      <div class="ds-icon">🏆</div>
-      <div class="ds-title">Waziyawa nhasi! · You already drew today</div>
-      <div class="ds-sub">Your points are waiting. Redeem now and receive cash to your EcoCash wallet.</div>
-      <div class="ds-pts" id="dbPts">0 pts</div>
-      <div class="ds-usd" id="dbUsd">= USD 0.00</div>
-      <div style="height:12px"></div>
-      <button class="ds-btn" onclick="proceedRedeem()">Redeem to EcoCash Wallet</button>
+    <div class="ds-head">
+      <span class="ds-trophy">🏆</span>
+      <div class="ds-hed">Waziyawa nhasi!</div>
+      <div class="ds-sub">You already drew today. Redeem your points now for instant EcoCash cash.</div>
+    </div>
+    <div class="ds-body">
+      <div class="ds-pts"  id="dbPts">0 pts</div>
+      <div class="ds-usd"  id="dbUsd">= USD 0.00</div>
+      <div class="ds-rate">Conversion rate: 100 pts = USD 5.00</div>
+      <button class="ds-btn" onclick="proceedRedeem()">Redeem to EcoCash Wallet →</button>
     </div>
   </div>
 </div>
-
-<!-- TOAST -->
-<div class="toast" id="toast"><span id="toastText"></span></div>
 
 <!-- AI FAB -->
 <button class="ai-fab" id="fab" aria-label="ChakaChaya Assistant">
@@ -479,10 +665,13 @@ html,body{width:100%;height:100%;height:100dvh;overflow:hidden;font-family:var(-
 <div class="ai-panel" id="cpanel" role="dialog" aria-label="ChakaChaya Assistant">
   <div class="ai-head">
     <div class="ai-av"><img src="assets/ecocash.png" alt=""></div>
-    <div><div class="ai-name">ChakaChaya Assistant</div><div class="ai-status"><div class="ai-sdot"></div>Online</div></div>
+    <div>
+      <div class="ai-name">ChakaChaya Assistant</div>
+      <div class="ai-status"><div class="ai-sdot"></div>Online · Ndinekutiitira</div>
+    </div>
     <button class="ai-x" id="cpX">✕</button>
   </div>
-  <div class="ai-msgs" id="msgs"></div>
+  <div class="ai-msgs"  id="msgs"></div>
   <div class="ai-chips" id="cchips"></div>
   <div class="ai-footer">
     <input class="ai-input" id="cpIn" type="text" placeholder="Ask about ChakaChaya…" maxlength="300">
@@ -491,6 +680,8 @@ html,body{width:100%;height:100%;height:100dvh;overflow:hidden;font-family:var(-
 </div>
 
 <script>
+
+
 /* ════════ PRESERVED JS LOGIC ════════ */
 function hap(s){if(!navigator.vibrate)return;try{navigator.vibrate({select:8,light:12,medium:22,success:[12,60,12],error:[50,40,50]}[s]||12)}catch(e){}}
 const RATE=0.05;
@@ -640,7 +831,7 @@ function doRedeem(){
   navigate('login.html');
 }
 
-const COLS=['#005F8E','#00C2FF','#D97706','#EF4444','#10B981','#FFFFFF','#FDE68A'];
+const COLS=['#009FE3','#FDB913','#3CC8FF','#EF4444','#10B981','#FFFFFF','#003A70'];
 function boom(){
   for(let i=0;i<60;i++){setTimeout(()=>{
     const el=document.createElement('div');el.className='cf';
@@ -717,6 +908,8 @@ window.addEventListener('popstate',()=>{},{passive:true});
   inp.addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();send()}});
   setTimeout(()=>{if(!open)badge.classList.add('show')},3000);
 })();
+
+
 </script>
 </body>
 </html>
